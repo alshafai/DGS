@@ -17,4 +17,5 @@ Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment 
  https://github.com/dbuscombe-usgs
  see also (project blog):
  http://dbuscombe-usgs.github.com/
-====================================
+
+Please download, try, report bugs, fork, modify, evaluate, discuss. Thanks for stopping by!
