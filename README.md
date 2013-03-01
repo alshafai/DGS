@@ -2,7 +2,12 @@
 
 MATLAB software to calculate the grain size distribution from an image of sediment or other granular material
 
-Implements the algorithm of 
+To run the program, download and unzip, open MATLAB, cd to the DGS-master directory, then in the command window type:
+
+dgs_gui 
+
+
+This program implements the algorithm of 
 Buscombe, D. (2013, in review) 
 Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces and Thin Sections, and Other Natural Granular Patterns, Sedimentology
  
