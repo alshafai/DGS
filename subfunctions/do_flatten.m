@@ -29,7 +29,7 @@ ButtonName = questdlg('Flatten all images?','Flatten all?', ...
     'Yes','No, just this one', 'Yes');
 
 if strcmp(ButtonName,'Yes')
-    wh = waitbar(0,'Please wait, flatteningering images ...');
+    wh = waitbar(0,'Please wait, flattening images ...');
     
     for ii=1:length(sample)
         
@@ -84,6 +84,7 @@ if strcmp(ButtonName,'Yes')
                     max(sample(ii).roi_x{k}));
             end
             
+            
             %         set(findobj('tag','current_image'),'userdata',sample);
             disp('... done!')
             
@@ -95,6 +96,15 @@ if strcmp(ButtonName,'Yes')
         
     end
     close(wh)
+    
+    for ii=1:length(sample)
+                sample(ii).dist=[];
+                sample(ii).percentiles=[];
+                sample(ii).arith_moments=[];
+                sample(ii).geom_moments=[];
+    end
+%     set(findobj('tag','current_image'),'userdata',sample);
+    
     
 else % no just this image
     
@@ -153,9 +163,19 @@ else % no just this image
                 max(sample(ix).roi_x{k}));
         end
         
+        if ~isempty(sample(ix).dist)
+            sample(ix).dist=[];
+            sample(ix).percentiles=[];
+            sample(ix).arith_moments=[];
+            sample(ix).geom_moments=[];
+        end
+        
     end
     
 end
+
+% set(findobj('tag','current_image'),'userdata',sample);
+
 
 [Nv,Nu,~] = size(sample(ix).data);
 % calculate 2D autocorrel
@@ -198,8 +218,8 @@ grid off
 title('2D autocorrelation')
 
 
+    set(findobj('tag','current_image'),'userdata',sample);
 set(findobj('tag','current_image'),'cdata',sample(ix).data);
-set(findobj('tag','current_image'),'userdata',sample);
 disp('... done!')
 
 clear h k Nu Nv mag im auto nlags l centx centy

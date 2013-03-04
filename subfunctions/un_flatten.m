@@ -24,6 +24,11 @@
 %   routine is provided as is without any express or implied warranties
 %   whatsoever.
 %====================================
+
+% get current image
+% and current image data
+sample=get(findobj('tag','current_image'),'userdata');
+
 if sample(ix).flattened %|| ~sample(ix).filtered
     
     if isfield(sample(ix),'orig_data')
@@ -73,6 +78,7 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     axes(ax3)
     title('')
     
+        sample=get(findobj('tag','current_image'),'userdata');
     set(h,'userdata',sample);
     set(h,'cdata',sample(ix).auto); % make fi
     
@@ -88,5 +94,8 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     set(findobj('tag','current_image'),'userdata',sample);
     
     clear Nu Nv mag im auto nlags l centx centy
+    
+else
+            uiwait(msgbox('image not been flattened',' '));
     
 end

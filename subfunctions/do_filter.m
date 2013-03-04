@@ -29,7 +29,7 @@ ButtonName = questdlg('Filter all images?','Filter all?', ...
     'Yes','No, just this one', 'Yes');
 
 if strcmp(ButtonName,'Yes')
-        wh = waitbar(0,'Please wait, filtering images ...');
+    wh = waitbar(0,'Please wait, filtering images ...');
     
     for ii=1:length(sample)
         
@@ -44,7 +44,7 @@ if strcmp(ButtonName,'Yes')
                 sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
                     sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
                 
-            end   
+            end
             
             [rows,cols] = size(sample(ii).data);
             sample(ix).orig_data=sample(ii).data;
@@ -74,12 +74,21 @@ if strcmp(ButtonName,'Yes')
                     min(sample(ii).roi_x{k}):...
                     max(sample(ii).roi_x{k}));
             end
-                        
+            
+            
         end
         waitbar(ii/length(sample),wh)
         
     end
     close(wh)
+    
+    for ii=1:length(sample)
+                sample(ii).dist=[];
+                sample(ii).percentiles=[];
+                sample(ii).arith_moments=[];
+                sample(ii).geom_moments=[];
+    end
+%     set(findobj('tag','current_image'),'userdata',sample);
 
     
 else % no, just this image
@@ -123,7 +132,15 @@ else % no, just this image
                 max(sample(ix).roi_x{k}));
         end
         
+        if ~isempty(sample(ix).dist)
+            sample(ix).dist=[];
+            sample(ix).percentiles=[];
+            sample(ix).arith_moments=[];
+            sample(ix).geom_moments=[];
+        end
+        
     end
+    
     
 end
 

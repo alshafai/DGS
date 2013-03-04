@@ -95,6 +95,7 @@ close(wh)
 
 set(findobj('tag','current_image'),'userdata',sample);
 
+
 if ~isempty(sample(ix).dist)
     
     h=findobj('Tag','plot_axes');
@@ -152,6 +153,7 @@ end
 
 clear tmpimage Nv Nu h
 
+    set(findobj('tag','current_image'),'userdata',sample);
 
 
 

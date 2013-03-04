@@ -63,8 +63,8 @@ if sample(ix).num_roi>0
 end
 
 % first set axes ticks to be increments of 500
-set(ax,'ytick',(500:500:size(sample(ix).data,1)))
-set(ax,'xtick',(500:500:size(sample(ix).data,2)))
+% set(ax,'ytick',(100:100:size(sample(ix).data,1)))
+% set(ax,'xtick',(100:100:size(sample(ix).data,2)))
 % scale current x and y labels
 set(ax,'xticklabels',num2str(get(ax,'xtick')'.*sample(ix).resolution))
 set(ax,'yticklabels',num2str(get(ax,'ytick')'.*sample(ix).resolution))

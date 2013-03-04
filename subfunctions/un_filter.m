@@ -24,13 +24,16 @@
 %   routine is provided as is without any express or implied warranties
 %   whatsoever.
 %====================================
-if sample(ix).filtered || ~sample(ix).flattened
+
+if sample(ix).filtered %|| ~sample(ix).flattened
     
     if isfield(sample(ix),'orig_data')
         sample(ix).data=sample(ix).orig_data;
         sample(ix).orig_data=[];
     end
     sample(ix).filtered = 0;
+    
+% sample=get(findobj('tag','current_image'),'userdata');
     
     if isempty(sample(ix).data)
         dgs_gui_swopsimages
@@ -73,6 +76,7 @@ if sample(ix).filtered || ~sample(ix).flattened
     axes(ax3)
     title('')
     
+    sample=get(findobj('tag','current_image'),'userdata');
     set(h,'userdata',sample);
     set(h,'cdata',sample(ix).auto); % make fi
     
@@ -88,5 +92,10 @@ if sample(ix).filtered || ~sample(ix).flattened
     
     clear Nu Nv mag im auto nlags l centx centy
     
+else
+            uiwait(msgbox('image not been filtered',' '));
+        
 end
+
+
 

@@ -26,7 +26,7 @@
 %====================================
 
 dofilt=0;
-density=100;
+density=50;
 start_size=3;
 
 MotherWav='Morlet';
@@ -70,7 +70,7 @@ if sample(ix).num_roi>0
         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.9));
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
-    sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
+    sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
     
     [sample(ix).percentiles,sample(ix).geom_moments,...
         sample(ix).arith_moments]=gsdparams(sample(ix).dist(:,2),sample(ix).dist(:,1));
