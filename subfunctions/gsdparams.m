@@ -53,20 +53,20 @@ elseif length(d)~=length(cd)
     error('input vectors must be the same length')
 end
 
-cd=[0;cd]; d=[0;d];
+cd=[0;cd]; d=[0;d]; sizes=[0;sizes];
 
 % percentiles (5,16,25,50,75,84,95)
-pd(1)=interp1q(cd,sizes,.05);
-pd(2)=interp1q(cd,sizes,.10);
-pd(3)=interp1q(cd,sizes,.16);
-pd(4)=interp1q(cd,sizes,.25);
-pd(5)=interp1q(cd,sizes,.50);
-pd(6)=interp1q(cd,sizes,.75);
-pd(7)=interp1q(cd,sizes,.84);
-pd(8)=interp1q(cd,sizes,.90);
-pd(9)=interp1q(cd,sizes,.95);
+pd(1)=interp1(cd,sizes,.05);
+pd(2)=interp1(cd,sizes,.10);
+pd(3)=interp1(cd,sizes,.16);
+pd(4)=interp1(cd,sizes,.25);
+pd(5)=interp1(cd,sizes,.50);
+pd(6)=interp1(cd,sizes,.75);
+pd(7)=interp1(cd,sizes,.84);
+pd(8)=interp1(cd,sizes,.90);
+pd(9)=interp1(cd,sizes,.95);
 
-cd(1)=[]; d(1)=[];
+cd(1)=[]; d(1)=[]; sizes(1)=[];
 
 % Folk and Ward geometric graphical measures
 gm(1)=exp((log(pd(3))+log(pd(5))+log(pd(7)))/3); %mean

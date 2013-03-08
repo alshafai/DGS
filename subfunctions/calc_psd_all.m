@@ -36,62 +36,71 @@ Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
     'J1',[],...
     'Mother',MotherWav);
 
-wh = waitbar(0,'Please wait, processing all images ...');
-
-for ii=1:length(sample)
+if length(sample)==1
     
-    if sample(ii).num_roi>0
+    calc_psd
+    
+else
+    
+    wh = waitbar(0,'Please wait, processing all images ...');
+    
+    for ii=1:length(sample)
         
-        P=cell(1,sample(ii).num_roi); scale=cell(1,sample(ii).num_roi);
-        
-        for k=1:sample(ii).num_roi
+        if sample(ii).num_roi>0
             
-            [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
-        end
-        
-        scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
-        
-        D=zeros(sample(ii).num_roi,length(scalei));
-        for k=1:sample(ii).num_roi
-            tmp=interp1(scale{k},P{k},scalei);
-            tmp(isnan(tmp))=0;
-            D(k,:)=tmp./sum(tmp);
-        end
-        
-        clear k tmp P scale h x y
-        
-        if sample(ii).num_roi>1
-            d=(mean(D)./sum(mean(D)))'; d(isnan(d))=0;
-            sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+            P=cell(1,sample(ii).num_roi); scale=cell(1,sample(ii).num_roi);
+            
+            for k=1:sample(ii).num_roi
+                
+                [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
+            end
+            
+            %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
+            scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
+            
+            D=zeros(sample(ii).num_roi,length(scalei));
+            for k=1:sample(ii).num_roi
+                tmp=interp1(scale{k},P{k},scalei);
+                tmp(isnan(tmp))=0;
+                D(k,:)=tmp./sum(tmp);
+            end
+            
+            clear k tmp P scale h x y
+            
+            if sample(ii).num_roi>1
+                d=(mean(D)./sum(mean(D)))'; d(isnan(d))=0;
+                sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+            else
+                d=D(:); d(isnan(d))=0;
+                sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+            end
+            
+            index_keep=1:...
+                round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.99));
+            
+            sample(ii).dist=sample(ii).dist(index_keep,:);
+            sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
+            
+            [sample(ii).percentiles,sample(ii).geom_moments,...
+                sample(ii).arith_moments]=gsdparams(sample(ii).dist(:,2),sample(ii).dist(:,1));
+            
+            sample(ii).geom_moments(2) = 1000*2^-sample(ii).geom_moments(2);
+            
+            clear D scalei index_keep
+            
+            % need to save outputs
+            
         else
-            d=D(:); d(isnan(d))=0;
-            sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+            
+            uiwait(msgbox('Create ROI first!','Warning','modal'));
+            
         end
-        
-        index_keep=1:...
-            round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.9));
-        
-        sample(ii).dist=sample(ii).dist(index_keep,:);
-        sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
-        
-        [sample(ii).percentiles,sample(ii).geom_moments,...
-            sample(ii).arith_moments]=gsdparams(sample(ii).dist(:,2),sample(ii).dist(:,1));
-        
-        sample(ii).geom_moments(2) = 1000*2^-sample(ii).geom_moments(2);
-        
-        clear D scalei index_keep
-        
-        % need to save outputs
-        
-    else
-        
-        uiwait(msgbox('Create ROI first!','Warning','modal'));
+        waitbar(ii/length(sample),wh)
         
     end
-    waitbar(ii/length(sample),wh)
+    close(wh)
     
 end
-close(wh)
 
 set(findobj('tag','current_image'),'userdata',sample);
 
@@ -153,7 +162,7 @@ end
 
 clear tmpimage Nv Nu h
 
-    set(findobj('tag','current_image'),'userdata',sample);
+set(findobj('tag','current_image'),'userdata',sample);
 
 
 

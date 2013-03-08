@@ -33,7 +33,7 @@ if sample(ix).filtered %|| ~sample(ix).flattened
     end
     sample(ix).filtered = 0;
     
-% sample=get(findobj('tag','current_image'),'userdata');
+sample=get(findobj('tag','current_image'),'userdata');
     
     if isempty(sample(ix).data)
         dgs_gui_swopsimages
@@ -91,6 +91,8 @@ if sample(ix).filtered %|| ~sample(ix).flattened
     set(findobj('tag','current_image'),'userdata',sample);
     
     clear Nu Nv mag im auto nlags l centx centy
+
+    uiwait(msgbox('filter removed',' '));
     
 else
             uiwait(msgbox('image not been filtered',' '));

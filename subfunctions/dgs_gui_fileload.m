@@ -44,6 +44,18 @@ else % cancel button not pressed
         sample(1).data=double(0.299 * sample(1).data(:,:,1) + 0.5870 * ...
             sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
         sample(1).name=image_name;
+        sample(1).num_roi=0;
+        sample(1).resolution=1;
+        sample(1).flattened=0;
+        sample(1).filtered=0;
+        sample(1).filt1=2;
+        sample(1).filt2=0.25;
+        sample(1).filt3=2;
+        sample(1).percentiles={};
+        sample(1).arith_moments={};
+        sample(1).geom_moments={};
+        sample(1).dist={};
+        
         
     else % more than 1 image
         
@@ -70,7 +82,7 @@ else % cancel button not pressed
             F{i}=ff;
         end
         
-           
+        
         % load first two images only
         sample(1).data=imread([image_path char(image_name(1))]);
         %                 sample(1).data=imread([image_path image_name]);
@@ -122,7 +134,7 @@ colormap gray
 im=sample(1).data(1:min(Nu,Nv),1:min(Nu,Nv));
 % 2D-FFT transform on de-meaned image
 % power spectrum
-mag=abs(fft2(fftshift(im-mean(im(:))))).^2; 
+mag=abs(fft2(fftshift(im-mean(im(:))))).^2;
 %Shift zero-frequency component to centre of spectrum
 auto=fftshift(real(ifft2(mag)));
 auto = auto./max(auto(:));

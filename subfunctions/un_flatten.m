@@ -37,6 +37,8 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     end
     sample(ix).flattened = 0;
     
+    sample=get(findobj('tag','current_image'),'userdata');
+
     if isempty(sample(ix).data)
         dgs_gui_swopsimages
     end
@@ -78,7 +80,7 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     axes(ax3)
     title('')
     
-        sample=get(findobj('tag','current_image'),'userdata');
+    sample=get(findobj('tag','current_image'),'userdata');
     set(h,'userdata',sample);
     set(h,'cdata',sample(ix).auto); % make fi
     
@@ -95,7 +97,9 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     
     clear Nu Nv mag im auto nlags l centx centy
     
+    uiwait(msgbox('filter removed',' '));
+    
 else
-            uiwait(msgbox('image not been flattened',' '));
+    uiwait(msgbox('image not been flattened',' '));
     
 end

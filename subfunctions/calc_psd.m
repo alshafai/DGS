@@ -49,8 +49,8 @@ if sample(ix).num_roi>0
     end
     close(h)
     
-    scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
-        
+    scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
+    
     D=zeros(sample(ix).num_roi,length(scalei));
     for k=1:sample(ix).num_roi
         tmp=interp1(scale{k},P{k},scalei);
@@ -67,7 +67,7 @@ if sample(ix).num_roi>0
     end
     
     index_keep=1:...
-        round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.9));
+        round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));

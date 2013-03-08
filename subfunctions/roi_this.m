@@ -48,7 +48,8 @@ sample(ix).whole_roi=0;
 
 sample(ix).num_roi=sample(ix).num_roi+1;
 
-rectpos=round(getrect(ax));
+[~,rectpos]=crop_image(ax);
+%rectpos=round(getrect(ax));
 
 % define the points for the line to be drawn
 sample(ix).roi_x{sample(ix).num_roi} =[rectpos(1), rectpos(1)+rectpos(3), rectpos(1)+rectpos(3), ...

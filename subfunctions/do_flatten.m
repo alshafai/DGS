@@ -25,88 +25,160 @@
 %   whatsoever.
 %====================================
 
-ButtonName = questdlg('Flatten all images?','Flatten all?', ...
-    'Yes','No, just this one', 'Yes');
-
-if strcmp(ButtonName,'Yes')
-    wh = waitbar(0,'Please wait, flattening images ...');
+if length(sample)>1
     
-    for ii=1:length(sample)
+    ButtonName = questdlg('Flatten all images?','Flatten all?', ...
+        'Yes','No, just this one', 'Yes');
+    
+    if strcmp(ButtonName,'Yes')
+        wh = waitbar(0,'Please wait, flattening images ...');
         
-        if ~sample(ii).flattened
+        for ii=1:length(sample)
+            
+            if ~sample(ii).flattened
+                
+                disp('Flattening image ...')
+                
+                % read data in if not already done so
+                if isempty(sample(ii).data)
+                    sample(ii).data=imread([image_path char(image_name(ii))]);
+                    
+                    sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
+                        sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+                    
+                end
+                
+                try
+                    img=imageresize(sample(ii).data, .5, .5);
+                    
+                    [rows,cols] = size(img); %sample(ix).data);
+                    [x,y] = meshgrid(1:rows,1:cols);
+                    P = polyfitn([x(:),y(:)],img(:),2); %sample(ix).data(:),2);
+                    zhat = polyvaln(P,[x(:),y(:)]);
+                    zhat = reshape(zhat,rows,cols);
+                    sample(ii).data=rescale(imageresize(img-zhat,2,2),0,255); %sample(ix).data-zhat,0,255);
+                    clear x y P zhat rows cols
+                catch
+                    disp('Error in flattening image: ran out of memory. Continuing with a slower method')
+                    
+                    tmp=sample(ii).data; tmp(:,1:2:end)=[]; tmp(1:2:end,:)=[];
+                    [rows,cols] = size(tmp);
+                    [x,y] = meshgrid(1:rows,1:cols);
+                    P = polyfitn([x(:),y(:)],tmp(:),2);
+                    zhat = polyvaln(P,[x(:),y(:)]);
+                    zhat = reshape(zhat,rows,cols);
+                    b = ones(size(zhat)).*NaN;
+                    c = reshape([zhat(:) b(:)]',2*size(zhat,1), []);
+                    d = ones(size(c)).*NaN; c=c'; d=d';
+                    e = reshape([c(:) d(:)]',2*size(c,1), [])';
+                    zhat=inpaintn(e,1);
+                    sample(ii).data=rescale(sample(ii).data-zhat,0,255);
+                    clear x y P zhat rows cols b c d e tmp
+                    
+                end
+                
+                sample(ii).flattened = 1;
+                
+                for k=1:sample(ii).num_roi
+                    sample(ii).roi{k}=sample(ix).data(min(sample(ii).roi_y{k}):...
+                        max(sample(ii).roi_y{k}),...
+                        min(sample(ii).roi_x{k}):...
+                        max(sample(ii).roi_x{k}));
+                end
+                
+                
+                %         set(findobj('tag','current_image'),'userdata',sample);
+                disp('... done!')
+                
+                clear h k Nu Nv mag im auto nlags l centx centy
+                
+                
+            end
+            waitbar(ii/length(sample),wh)
+            
+        end
+        close(wh)
+        
+        for ii=1:length(sample)
+            sample(ii).dist=[];
+            sample(ii).percentiles=[];
+            sample(ii).arith_moments=[];
+            sample(ii).geom_moments=[];
+        end
+        %     set(findobj('tag','current_image'),'userdata',sample);
+        
+        
+    else % no just this image
+        
+        if ~sample(ix).flattened
+            
+            h = waitbar(0,'Please wait...');
             
             disp('Flattening image ...')
             
-            % read data in if not already done so
-            if isempty(sample(ii).data)
-                sample(ii).data=imread([image_path char(image_name(ii))]);
-                
-                sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
-                    sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
-                
-            end
+            sample(ix).orig_data=sample(ix).data;
             
             try
-                img=imageresize(sample(ii).data, .5, .5);
+                
+                img=imageresize(sample(ix).data, .5, .5);
                 
                 [rows,cols] = size(img); %sample(ix).data);
                 [x,y] = meshgrid(1:rows,1:cols);
+                waitbar(.3,h)
                 P = polyfitn([x(:),y(:)],img(:),2); %sample(ix).data(:),2);
+                waitbar(.6,h)
                 zhat = polyvaln(P,[x(:),y(:)]);
+                waitbar(.8,h)
                 zhat = reshape(zhat,rows,cols);
-                sample(ii).data=rescale(imageresize(img-zhat,2,2),0,255); %sample(ix).data-zhat,0,255);
+                waitbar(.9,h)
+                sample(ix).data=rescale(imageresize(img-zhat,2,2),0,255); %sample(ix).data-zhat,0,255);
                 clear x y P zhat rows cols
             catch
                 disp('Error in flattening image: ran out of memory. Continuing with a slower method')
                 
-                tmp=sample(ii).data; tmp(:,1:2:end)=[]; tmp(1:2:end,:)=[];
+                tmp=sample(ix).data; tmp(:,1:2:end)=[]; tmp(1:2:end,:)=[];
                 [rows,cols] = size(tmp);
                 [x,y] = meshgrid(1:rows,1:cols);
+                waitbar(.3,h)
                 P = polyfitn([x(:),y(:)],tmp(:),2);
                 zhat = polyvaln(P,[x(:),y(:)]);
                 zhat = reshape(zhat,rows,cols);
+                waitbar(.5,h)
                 b = ones(size(zhat)).*NaN;
                 c = reshape([zhat(:) b(:)]',2*size(zhat,1), []);
                 d = ones(size(c)).*NaN; c=c'; d=d';
                 e = reshape([c(:) d(:)]',2*size(c,1), [])';
                 zhat=inpaintn(e,1);
-                sample(ii).data=rescale(sample(ii).data-zhat,0,255);
+                waitbar(.9,h)
+                sample(ix).data=rescale(sample(ix).data-zhat,0,255);
                 clear x y P zhat rows cols b c d e tmp
                 
             end
+            close(h)
             
-            sample(ii).flattened = 1;
+            sample(ix).flattened = 1;
             
-            for k=1:sample(ii).num_roi
-                sample(ii).roi{k}=sample(ix).data(min(sample(ii).roi_y{k}):...
-                    max(sample(ii).roi_y{k}),...
-                    min(sample(ii).roi_x{k}):...
-                    max(sample(ii).roi_x{k}));
+            for k=1:sample(ix).num_roi
+                sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
+                    max(sample(ix).roi_y{k}),...
+                    min(sample(ix).roi_x{k}):...
+                    max(sample(ix).roi_x{k}));
             end
             
-            
-            %         set(findobj('tag','current_image'),'userdata',sample);
-            disp('... done!')
-            
-            clear h k Nu Nv mag im auto nlags l centx centy
-            
+            if ~isempty(sample(ix).dist)
+                sample(ix).dist=[];
+                sample(ix).percentiles=[];
+                sample(ix).arith_moments=[];
+                sample(ix).geom_moments=[];
+            end
             
         end
-        waitbar(ii/length(sample),wh)
         
     end
-    close(wh)
     
-    for ii=1:length(sample)
-                sample(ii).dist=[];
-                sample(ii).percentiles=[];
-                sample(ii).arith_moments=[];
-                sample(ii).geom_moments=[];
-    end
-%     set(findobj('tag','current_image'),'userdata',sample);
+    % set(findobj('tag','current_image'),'userdata',sample);
     
-    
-else % no just this image
+else
     
     if ~sample(ix).flattened
         
@@ -172,9 +244,8 @@ else % no just this image
         
     end
     
+    
 end
-
-% set(findobj('tag','current_image'),'userdata',sample);
 
 
 [Nv,Nu,~] = size(sample(ix).data);
@@ -218,7 +289,7 @@ grid off
 title('2D autocorrelation')
 
 
-    set(findobj('tag','current_image'),'userdata',sample);
+set(findobj('tag','current_image'),'userdata',sample);
 set(findobj('tag','current_image'),'cdata',sample(ix).data);
 disp('... done!')
 

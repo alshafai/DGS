@@ -67,39 +67,39 @@ else
     b = a(r1:r2, c1:c2, :);
 end
 
-switch nargout 
-case 0
-    if (isempty(b))
-        msg = 'The crop rectangle does not intersect the image';
-        wid = sprintf('Images:%s:cropRectDoesNotIntersectImage',mfilename);
-        warning(wid,msg);
-    end
-    figure;
-    if (~isempty(cm))
-        imagesc(b,cm), colormap gray, axis image
-   
-    else
-        imagesc(b), colormap gray, axis image
-     
-    end
-    
-case 1
-    varargout{1} = b;
-    
-case 2
-    varargout{1} = b;
-    varargout{2} = rect;
-    
-case 4
-    varargout{1} = x;
-    varargout{2} = y;
-    varargout{3} = b;
-    varargout{4} = rect;
-
-otherwise
-    msg = 'Too many output arguments';
-    eid = sprintf('Images:%s:tooManyOutputArguments',mfilename);
-    error(eid,msg);
+switch nargout
+    case 0
+        if (isempty(b))
+            msg = 'The crop rectangle does not intersect the image';
+            wid = sprintf('Images:%s:cropRectDoesNotIntersectImage',mfilename);
+            warning(wid,msg);
+        end
+        figure;
+        if (~isempty(cm))
+            imagesc(b,cm), colormap gray, axis image
+            
+        else
+            imagesc(b), colormap gray, axis image
+            
+        end
+        
+    case 1
+        varargout{1} = b;
+        
+    case 2
+        varargout{1} = b;
+        varargout{2} = rect;
+        
+    case 4
+        varargout{1} = x;
+        varargout{2} = y;
+        varargout{3} = b;
+        varargout{4} = rect;
+        
+    otherwise
+        msg = 'Too many output arguments';
+        eid = sprintf('Images:%s:tooManyOutputArguments',mfilename);
+        error(eid,msg);
 end
 
 %%%
@@ -117,82 +117,82 @@ rect = [];
 checknargin(0,5,nargin,mfilename);
 
 switch nargin
-case 0
-    % crop_image
-    % Get information from current figure
-    [x,y,a,flag] = getimage;
-    if (flag == 0)
-        msg = 'No image found in the current axes';
-        eid = sprintf('Images:%s:noImageFoundInCurrentAxes',mfilename);
-        error(eid,msg);
-    end
-    if (flag == 1)
-        % input image is indexed; get its colormap;
-        cm = colormap;
-    end
-    rect = getrect(gcf);
-    
-case 1
-    % crop_image(I) or crop_image(RGB)
-    a = varargin{1};
-    x = [1 size(a,2)];
-    y = [1 size(a,1)];
-    CheckCData(a);
-    imagesc(a); colormap gray, axis image
-  
-    rect = getrect(gcf);
-    
-case 2
-    % crop_image(X,MAP) or crop_image(I,RECT) or crop_image(RGB,RECT)
-    a = varargin{1};
-    x = [1 size(a,2)];
-    y = [1 size(a,1)];
-    if (size(varargin{2},2) == 3)
-        % crop_image(X,MAP)
-        cm = varargin{2};
-        CheckCData(a);
-        imagesc(a,cm); colormap gray, axis image
-      
+    case 0
+        % crop_image
+        % Get information from current figure
+        [x,y,a,flag] = getimage;
+        if (flag == 0)
+            msg = 'No image found in the current axes';
+            eid = sprintf('Images:%s:noImageFoundInCurrentAxes',mfilename);
+            error(eid,msg);
+        end
+        if (flag == 1)
+            % input image is indexed; get its colormap;
+            cm = colormap;
+        end
         rect = getrect(gcf);
-    else
-        rect = varargin{2};
-    end
-    
-case 3
-    % crop_image(x,y,RGB) or crop_image(X,MAP,RECT)
-    if (size(varargin{3},3) == 3)
-        % crop_image(x,y,RGB)
+        
+    case 1
+        % crop_image(I) or crop_image(RGB)
+        a = varargin{1};
+        x = [1 size(a,2)];
+        y = [1 size(a,1)];
+        CheckCData(a);
+        imagesc(a); colormap gray, axis image
+        
+        rect = getrect(gcf);
+        
+    case 2
+        % crop_image(X,MAP) or crop_image(I,RECT) or crop_image(RGB,RECT)
+        a = varargin{1};
+        x = [1 size(a,2)];
+        y = [1 size(a,1)];
+        if (size(varargin{2},2) == 3)
+            % crop_image(X,MAP)
+            cm = varargin{2};
+            CheckCData(a);
+            imagesc(a,cm); colormap gray, axis image
+            
+            rect = getrect(gcf);
+        else
+            rect = varargin{2};
+        end
+        
+    case 3
+        % crop_image(x,y,RGB) or crop_image(X,MAP,RECT)
+        if (size(varargin{3},3) == 3)
+            % crop_image(x,y,RGB)
+            x = varargin{1};
+            y = varargin{2};
+            a = varargin{3};
+            CheckCData(a);
+            imagesc(x,y,a); colormap gray, axis image
+            
+            rect = getrect(gcf);
+        else
+            % crop_image(X,MAP,RECT)
+            a = varargin{1};
+            cm = varargin{2};
+            rect = varargin{3};
+            x = [1 size(a,2)];
+            y = [1 size(a,1)];
+        end
+        
+    case 4
+        % crop_image(x,y,I,RECT) or crop_image(x,y,RGB,RECT)
         x = varargin{1};
         y = varargin{2};
         a = varargin{3};
-        CheckCData(a);
-        imagesc(x,y,a); colormap gray, axis image
-       
-        rect = getrect(gcf);
-    else
-        % crop_image(X,MAP,RECT)
-        a = varargin{1};
-        cm = varargin{2};
-        rect = varargin{3};
-        x = [1 size(a,2)];
-        y = [1 size(a,1)];
-    end
-    
-case 4
-    % crop_image(x,y,I,RECT) or crop_image(x,y,RGB,RECT)
-    x = varargin{1};
-    y = varargin{2};
-    a = varargin{3};
-    rect = varargin{4};
-    
-case 5
-    % crop_image(x,y,X,MAP,RECT)
-    x = varargin{1};
-    y = varargin{2};
-    a = varargin{3};
-    cm = varargin{4};
-    rect = varargin{5};
-    
+        rect = varargin{4};
+        
+    case 5
+        % crop_image(x,y,X,MAP,RECT)
+        x = varargin{1};
+        y = varargin{2};
+        a = varargin{3};
+        cm = varargin{4};
+        rect = varargin{5};
+        
 end
 
 % In some cases CheckCData gets called twice.  This could be avoided with
@@ -265,20 +265,20 @@ else
     end
     
     switch get(varargin{1}, 'Type')
-    case 'figure'
-        GETRECT_FIG = varargin{1};
-        GETRECT_AX = get(GETRECT_FIG, 'CurrentAxes');
-        if (isempty(GETRECT_AX))
-            GETRECT_AX = axes('Parent', GETRECT_FIG);
-        end
-
-    case 'axes'
-        GETRECT_AX = varargin{1};
-        GETRECT_FIG = get(GETRECT_AX, 'Parent');
-
-    otherwise
-        CleanUp(xlimorigmode,ylimorigmode,zlimorigmode);
-        error('First argument should be a figure or axes handle');
+        case 'figure'
+            GETRECT_FIG = varargin{1};
+            GETRECT_AX = get(GETRECT_FIG, 'CurrentAxes');
+            if (isempty(GETRECT_AX))
+                GETRECT_AX = axes('Parent', GETRECT_FIG);
+            end
+            
+        case 'axes'
+            GETRECT_AX = varargin{1};
+            GETRECT_FIG = get(GETRECT_AX, 'Parent');
+            
+        otherwise
+            CleanUp(xlimorigmode,ylimorigmode,zlimorigmode);
+            error('First argument should be a figure or axes handle');
     end
 end
 
@@ -297,20 +297,20 @@ figure(GETRECT_FIG);
 
 % Initialize the lines to be used for the drag
 GETRECT_H1 = line('Parent', GETRECT_AX, ...
-                  'XData', [0 0 0 0 0], ...
-                  'YData', [0 0 0 0 0], ...
-                  'Visible', 'off', ...
-                  'Clipping', 'off', ...
-                  'Color', 'k', ...
-                  'LineStyle', '-');
+    'XData', [0 0 0 0 0], ...
+    'YData', [0 0 0 0 0], ...
+    'Visible', 'off', ...
+    'Clipping', 'off', ...
+    'Color', 'k', ...
+    'LineStyle', '-');
 
 GETRECT_H2 = line('Parent', GETRECT_AX, ...
-                  'XData', [0 0 0 0 0], ...
-                  'YData', [0 0 0 0 0], ...
-                  'Visible', 'off', ...
-                  'Clipping', 'off', ...
-                  'Color', 'w', ...
-                  'LineStyle', ':');
+    'XData', [0 0 0 0 0], ...
+    'YData', [0 0 0 0 0], ...
+    'Visible', 'off', ...
+    'Clipping', 'off', ...
+    'Color', 'w', ...
+    'LineStyle', ':');
 
 
 % We're ready; wait for the user to do the drag
@@ -334,7 +334,7 @@ if (errCatch == 1)
     errStatus = 'trap';
     
 elseif (~ishandle(GETRECT_H1) | ...
-            ~strcmp(get(GETRECT_H1, 'UserData'), 'Completed'))
+        ~strcmp(get(GETRECT_H1, 'UserData'), 'Completed'))
     errStatus = 'unknown';
     
 else
@@ -353,8 +353,8 @@ end
 
 % Restore the figure state
 if (ishandle(GETRECT_FIG))
-   uirestore(state);
-   set(GETRECT_FIG, 'DoubleBuffer', old_db);
+    uirestore(state);
+    set(GETRECT_FIG, 'DoubleBuffer', old_db);
 end
 
 CleanUp(xlimorigmode,ylimorigmode,zlimorigmode);
@@ -362,21 +362,21 @@ CleanUp(xlimorigmode,ylimorigmode,zlimorigmode);
 % Depending on the error status, return the answer or generate
 % an error message.
 switch errStatus
-case 'ok'
-    % Return the answer
-    xmin = min(x);
-    ymin = min(y);
-    rect = [xmin ymin max(x)-xmin max(y)-ymin];
-    
-case 'trap'
-    % An error was trapped during the waitfor
-    error('Interruption during mouse selection.');
-    
-case 'unknown'
-    % User did something to cause the rectangle drag to
-    % terminate abnormally.  For example, we would get here
-    % if the user closed the figure in the drag.
-    error('Interruption during mouse selection.');
+    case 'ok'
+        % Return the answer
+        xmin = min(x);
+        ymin = min(y);
+        rect = [xmin ymin max(x)-xmin max(y)-ymin];
+        
+    case 'trap'
+        % An error was trapped during the waitfor
+        error('Interruption during mouse selection.');
+        
+    case 'unknown'
+        % User did something to cause the rectangle drag to
+        % terminate abnormally.  For example, we would get here
+        % if the user closed the figure in the drag.
+        error('Interruption during mouse selection.');
 end
 
 %--------------------------------------------------
@@ -388,7 +388,7 @@ global GETRECT_FIG GETRECT_AX GETRECT_H1 GETRECT_H2
 global GETRECT_PT1 GETRECT_TYPE
 
 set(GETRECT_FIG, 'Interruptible', 'off', ...
-                 'BusyAction', 'cancel');
+    'BusyAction', 'cancel');
 
 [x1, y1] = getcurpt(GETRECT_AX);
 GETRECT_PT1 = [x1 y1];
@@ -399,15 +399,15 @@ xdata = [x1 x2 x2 x1 x1];
 ydata = [y1 y1 y2 y2 y1];
 
 set(GETRECT_H1, 'XData', xdata, ...
-                'YData', ydata, ...
-                'Visible', 'on');
+    'YData', ydata, ...
+    'Visible', 'on');
 set(GETRECT_H2, 'XData', xdata, ...
-                'YData', ydata, ...
-                'Visible', 'on');
+    'YData', ydata, ...
+    'Visible', 'on');
 
 % Let the motion functions take over.
 set(GETRECT_FIG, 'WindowButtonMotionFcn', 'getrect(''ButtonMotion'');', ...
-                 'WindowButtonUpFcn', 'getrect(''ButtonUp'');');
+    'WindowButtonUpFcn', 'getrect(''ButtonUp'');');
 
 
 %-------------------------------------------------
@@ -429,9 +429,9 @@ if (~strcmp(GETRECT_TYPE, 'normal'))
 end
 
 set(GETRECT_H1, 'XData', xdata, ...
-                'YData', ydata);
+    'YData', ydata);
 set(GETRECT_H2, 'XData', xdata, ...
-                'YData', ydata);
+    'YData', ydata);
 
 %--------------------------------------------------
 % Subfunction ButtonUp
@@ -443,7 +443,7 @@ global GETRECT_PT1 GETRECT_TYPE
 
 % Kill the motion function and discard pending events
 set(GETRECT_FIG, 'WindowButtonMotionFcn', '', ...
-                 'Interruptible', 'off');
+    'Interruptible', 'off');
 
 % Set final line data
 [x2,y2] = getcurpt(GETRECT_AX);
@@ -456,16 +456,16 @@ if (~strcmp(GETRECT_TYPE, 'normal'))
 end
 
 set(GETRECT_H1, 'XData', xdata, ...
-                'YData', ydata);
+    'YData', ydata);
 set(GETRECT_H2, 'XData', xdata, ...
-                'YData', ydata);
+    'YData', ydata);
 
 % Unblock execution of the main routine
 set(GETRECT_H1, 'UserData', 'Completed');
 
 %-----------------------------------------------
 % Subfunction Constrain
-% 
+%
 % constrain rectangle to be a square in
 % axes coordinates
 %-----------------------------------------------
@@ -479,9 +479,9 @@ ydis = abs(y2 - y1);
 xdis = abs(x2 - x1);
 
 if (ydis > xdis)
-   x2 = x1 + sign(x2 - x1) * ydis;
+    x2 = x1 + sign(x2 - x1) * ydis;
 else
-   y2 = y1 + sign(y2 - y1) * xdis;
+    y2 = y1 + sign(y2 - y1) * xdis;
 end
 
 xdata_out = [x1 x2 x2 x1 x1];
@@ -502,7 +502,7 @@ clear global GETRECT_PT1 GETRECT_TYPE
 
 
 
-	
+
 function [x,y] = getcurpt(axHandle)
 %GETCURPT Get current point.
 %   [X,Y] = GETCURPT(AXHANDLE) gets the x- and y-coordinates of
@@ -541,7 +541,7 @@ y = y + yExtentPerPixel/2;
 
 
 function checkinput(A, classes, attributes, function_name, ...
-                    variable_name, argument_position)
+    variable_name, argument_position)
 %CHECKINPUT Check validity of array.
 %   CHECKINPUT(A,CLASSES,ATTRIBUTES,FUNCTION_NAME,VARIABLE_NAME, ...
 %   ARGUMENT_POSITION) checks the validity of the array A and issues a
@@ -568,13 +568,13 @@ function checkinput(A, classes, attributes, function_name, ...
 check_classes(A, classes, function_name, variable_name, argument_position);
 
 check_attributes(A, attributes, function_name, variable_name, ...
-                 argument_position);
+    argument_position);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function tf = is_numeric(A)
 
 numeric_classes = {'double' 'uint8' 'uint16' 'uint32' 'int8' ...
-                   'int16' 'int32' 'single'};
+    'int16' 'int32' 'single'};
 
 tf = false;
 for p = 1:length(numeric_classes)
@@ -596,14 +596,14 @@ idx = strmatch('numeric', out, 'exact');
 if (length(idx) == 1)
     out(idx) = [];
     numeric_classes = {'uint8', 'int8', 'uint16', 'int16', ...
-                       'uint32', 'int32', 'single', 'double'}';
+        'uint32', 'int32', 'single', 'double'}';
     out = [out; numeric_classes];
 end
-    
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function check_classes(A, classes, function_name, ...
-                       variable_name, argument_position)
+    variable_name, argument_position)
 
 if isempty(classes)
     return
@@ -623,8 +623,8 @@ for k = 1:length(classes)
     if strcmp(classes{k}, 'numeric') && is_numeric(A)
         is_valid_type = true;
         break;
-
-    else        
+        
+    else
         if isa(A, classes{k})
             is_valid_type = true;
             break;
@@ -641,19 +641,19 @@ if ~is_valid_type
     end
     validTypes(end-1:end) = [];
     message1 = sprintf('Function %s expected its %s input argument, %s,', ...
-                       function_name, ...
-                       num2ordinal(argument_position), ...
-                       variable_name);
+        function_name, ...
+        num2ordinal(argument_position), ...
+        variable_name);
     message2 = 'to be one of these types:';
     message3 = sprintf('Instead its type was %s.', class(A));
     error(messageId, '%s\n%s\n\n  %s\n\n%s', message1, message2, validTypes, ...
-          message3);
+        message3);
 end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function check_attributes(A, attributes, function_name, ...
-                          variable_name, argument_position)
+    variable_name, argument_position)
 
 if ischar(attributes)
     if isempty(attributes)
@@ -675,10 +675,10 @@ for k = 1:length(attributes)
     
     if ~feval(tableEntry.checkFunction, A)
         messageId = sprintf('Images:%s:%s', function_name, ...
-                            tableEntry.mnemonic);
+            tableEntry.mnemonic);
         message1 = sprintf('Function %s expected its %s input argument, %s,', ...
-                           function_name, num2ordinal(argument_position), ...
-                           variable_name);
+            function_name, num2ordinal(argument_position), ...
+            variable_name);
         message2 = sprintf('to be %s.', tableEntry.endOfMessage);
         error(messageId, '%s\n%s', message1, message2);
     end
@@ -771,17 +771,17 @@ function tf = check_integer(A)
 try
     A = A(:);
     switch class(A)
-
-      case {'double','single'}
-        tf = all(floor(A) == A) & all(isfinite(A));
-
-      case {'uint8','int8','uint16','int16','uint32','int32','logical'}
-        tf = true;
-
-      otherwise
-        tf = false;
+        
+        case {'double','single'}
+            tf = all(floor(A) == A) & all(isfinite(A));
+            
+        case {'uint8','int8','uint16','int16','uint32','int32','logical'}
+            tf = true;
+            
+        otherwise
+            tf = false;
     end
-
+    
 catch
     tf = false;
 end
@@ -880,7 +880,7 @@ if isempty(table)
     table.integer.checkFunction     = @check_integer;
     table.integer.mnemonic          = 'expectedInteger';
     table.integer.endOfMessage      = 'integer-valued';
-        
+    
     table.nonnegative.checkFunction = @check_nonnegative;
     table.nonnegative.mnemonic      = 'expectedNonnegative';
     table.nonnegative.endOfMessage  = 'nonnegative';
@@ -920,50 +920,50 @@ function checknargin(low, high, numInputs, function_name)
 %   FUNCTION_NAME should be a string.
 
 if numInputs < low
-  msgId = sprintf('Images:%s:tooFewInputs', function_name);
-  if low == 1
-    msg1 = sprintf('Function %s expected at least 1 input argument', ...
-                   function_name);
-  else
-    msg1 = sprintf('Function %s expected at least %d input arguments', ...
-                   function_name, low);
-  end
-  
-  if numInputs == 1
-    msg2 = 'but was called instead with 1 input argument.';
-  else
-    msg2 = sprintf('but was called instead with %d input arguments.', ...
-                   numInputs);
-  end
-  
-  error(msgId, '%s\n%s', msg1, msg2);
-  
+    msgId = sprintf('Images:%s:tooFewInputs', function_name);
+    if low == 1
+        msg1 = sprintf('Function %s expected at least 1 input argument', ...
+            function_name);
+    else
+        msg1 = sprintf('Function %s expected at least %d input arguments', ...
+            function_name, low);
+    end
+    
+    if numInputs == 1
+        msg2 = 'but was called instead with 1 input argument.';
+    else
+        msg2 = sprintf('but was called instead with %d input arguments.', ...
+            numInputs);
+    end
+    
+    error(msgId, '%s\n%s', msg1, msg2);
+    
 elseif numInputs > high
-  msgId = sprintf('Images:%s:tooManyInputs', function_name);
-
-  if high == 1
-    msg1 = sprintf('Function %s expected at most 1 input argument', ...
-                   function_name);
-  else
-    msg1 = sprintf('Function %s expected at most %d input arguments', ...
-                   function_name, high);
-  end
-  
-  if numInputs == 1
-    msg2 = 'but was called instead with 1 input argument.';
-  else
-    msg2 = sprintf('but was called instead with %d input arguments.', ...
-                   numInputs);
-  end
-  
-  error(msgId, '%s\n%s', msg1, msg2);
+    msgId = sprintf('Images:%s:tooManyInputs', function_name);
+    
+    if high == 1
+        msg1 = sprintf('Function %s expected at most 1 input argument', ...
+            function_name);
+    else
+        msg1 = sprintf('Function %s expected at most %d input arguments', ...
+            function_name, high);
+    end
+    
+    if numInputs == 1
+        msg2 = 'but was called instead with 1 input argument.';
+    else
+        msg2 = sprintf('but was called instead with %d input arguments.', ...
+            numInputs);
+    end
+    
+    error(msgId, '%s\n%s', msg1, msg2);
 end
 
-  
-    
+
+
 
 function out = checkstrs(in, valid_strings, function_name, ...
-                         variable_name, argument_position)
+    variable_name, argument_position)
 %CHECKSTRS Check validity of option string.
 %   OUT = CHECKSTRS(IN,VALID_STRINGS,FUNCTION_NAME,VARIABLE_NAME, ...
 %   ARGUMENT_POSITION) checks the validity of the option string IN.  It
@@ -986,7 +986,7 @@ num_matches = prod(size(idx));
 
 if num_matches == 1
     out = valid_strings{idx};
-
+    
 else
     % Convert valid_strings to a single string containing a space-separated list
     % of valid strings.
@@ -995,21 +995,21 @@ else
         list = [list ', ' valid_strings{k}];
     end
     list(1:2) = [];
-
+    
     msg1 = sprintf('Function %s expected its %s input argument, %s,', ...
-                   function_name, num2ordinal(argument_position), ...
-                   variable_name);
+        function_name, num2ordinal(argument_position), ...
+        variable_name);
     msg2 = 'to match one of these strings:';
-
+    
     if num_matches == 0
         msg3 = sprintf('The input, ''%s'', did not match any of the valid strings.', in);
         id = sprintf('Images:%s:unrecognizedStringChoice', function_name);
-
+        
     else
         msg3 = sprintf('The input, ''%s'', matched more than one valid string.', in);
         id = sprintf('Images:%s:ambiguousStringChoice', function_name);
     end
-
+    
     error(id,'%s\n%s\n\n  %s\n\n%s', msg1, msg2, list, msg3);
 end
 
