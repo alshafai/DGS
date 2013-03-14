@@ -17,8 +17,42 @@
    from the United States Geological Survey, an agency of the United States Department of Interior. 
    For more information, see the official USGS copyright policy at 
    http://www.usgs.gov/visual-id/credit_usgs.html#copyright
-   This software may be used, copied, or redistributed as long as it is not
-   sold and this copyright notice is reproduced on each copy made.  This
-   routine is provided as is without any express or implied warranties
-   whatsoever.
 ====================================
+
+The following matlab files are distributed under the MIT software license (http://opensource.org/licenses/MIT):
+
+    subfunctions/highboostfilter.m
+    subfunctions/normalise.m
+Copyright (c) 1996-2005 Peter Kovesi
+
+    subfunctions/wave_bases.m
+Copyright (C) 1995-1998, Christopher Torrence and Gilbert P. Compo
+
+The following matlab files are distributed under the BSD License (http://opensource.org/licenses/BSD-2-Clause)
+
+    subfunctions/polyvaln.m
+    subfunctions/polyfitn.m
+Copyright (c) 2012, John D'Errico
+All rights reserved.
+
+    subfunctions/popupmessage.m
+Copyright (c) 2005, Samuel Cheng
+All rights reserved.
+
+    subfunctions/dctn.m
+    subfunctions/idctn.m
+Copyright (c) 2009, Damien Garcia
+All rights reserved.
+
+    subfunctions/inpaintn.m
+Copyright (c) 2010, Damien Garcia
+Copyright (c) 2009, Damien Garcia
+All rights reserved.
+
+    subfunctions/keep.m
+Copyright (c) 1998-1999,  Xiaoning (David) Yang 
+All rights reserved.
+
+
+
+

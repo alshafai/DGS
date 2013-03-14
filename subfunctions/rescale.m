@@ -20,10 +20,6 @@ function out=rescale(in,mn,mx)
 %   from the United States Geological Survey, an agency of the United States Department of Interior. 
 %   For more information, see the official USGS copyright policy at 
 %   http://www.usgs.gov/visual-id/credit_usgs.html#copyright
-%   This software may be used, copied, or redistributed as long as it is not
-%   sold and this copyright notice is reproduced on each copy made.  This
-%   routine is provided as is without any express or implied warranties
-%   whatsoever.
 %====================================
 m=min(in(:)); M=max(in(:));
 out=(mx-mn).*(in-m)/(M-m)+mn;
