@@ -106,7 +106,7 @@ h=findobj('tag','current_image');
 set(h,'userdata',sample);
 set(h,'cdata',sample(1).data); % make first image appear
 
-[Nv,Nu,~] = size(sample(1).data);
+[Nv,Nu,blank] = size(sample(1).data);
 set(h,'xdata',1:Nu); % scales and labels
 set(h,'ydata',1:Nv);
 set(findobj('tag','im_axes1'),'xlim',[-2 Nu+2],'ylim',[-2 Nv+2])
@@ -143,7 +143,7 @@ nlags=round(l/8);
 auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
 
 sample(1).auto = auto;
-[Nv,Nu,~] = size(sample(1).auto);
+[Nv,Nu,blank] = size(sample(1).auto);
 
 h=findobj('tag','auto_image');
 set(h,'userdata',sample);

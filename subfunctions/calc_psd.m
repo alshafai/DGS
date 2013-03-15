@@ -23,7 +23,7 @@
 
 dofilt=0;
 density=50;
-start_size=3;
+start_size=2;
 
 MotherWav='Morlet';
 Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
@@ -104,12 +104,12 @@ if sample(ix).num_roi>0
     h=findobj('tag','auto_image');
     
     tmpimage=sample(ix).roi{1};
-    [Nv,Nu,~] = size(tmpimage);
+    [Nv,Nu,blank] = size(tmpimage);
     tmpimage=tmpimage(round((Nv/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nv/2)+sample(ix).percentiles(8)*1/sample(ix).resolution),...
         round((Nu/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nu/2)+sample(ix).percentiles(8)*1/sample(ix).resolution));
-    [Nv,Nu,~] = size(tmpimage);
+    [Nv,Nu,blank] = size(tmpimage);
     set(h,'cdata',tmpimage); % make fi
     axes(ax3)
     set(findobj('tag','auto_axes'),'xlim',[0.5 0.5+Nv],...

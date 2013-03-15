@@ -244,7 +244,7 @@ else
 end
 
 
-[Nv,Nu,~] = size(sample(ix).data);
+[Nv,Nu,blank] = size(sample(ix).data);
 % calculate 2D autocorrel
 im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
 % 2D-FFT transform on de-meaned image
@@ -262,7 +262,7 @@ nlags=round(l/8);
 auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
 
 sample(ix).auto = auto;
-[Nv,~,~] = size(sample(ix).auto);
+[Nv,blank,blank] = size(sample(ix).auto);
 
 h=findobj('tag','auto_image');
 

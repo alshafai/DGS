@@ -198,7 +198,7 @@ end
 
 
 
-[Nv,Nu,~] = size(sample(ix).data);
+[Nv,Nu,blank] = size(sample(ix).data);
 % calculate 2D autocorrel
 im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
 % 2D-FFT transform on de-meaned image
@@ -216,7 +216,7 @@ nlags=round(l/8);
 auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
 
 sample(ix).auto = auto;
-[Nv,~,~] = size(sample(ix).auto);
+[Nv,blank,blank] = size(sample(ix).auto);
 
 h=findobj('tag','auto_image');
 
@@ -246,49 +246,3 @@ disp('... done!')
 clear h k Nu Nv mag im auto nlags l centx centy
 
 
-%         [Nv,Nu,~] = size(sample(ix).data);
-%         % calculate 2D autocorrel
-%         im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
-%         % 2D-FFT transform on de-meaned image
-%         % power spectrum
-%         mag=abs(fft2(im-mean(im(:)))).^2;
-%         %Shift zero-frequency component to centre of spectrum
-%         auto=fftshift(real(ifft2(mag)));
-%         auto = auto./max(auto(:));
-%         
-%         [centx,centy] = find(auto==1);
-%         % spectify number of lags to compute
-%         l = length(auto);
-%         nlags=round(l/8);
-%         % centre 2d autocorrelogram
-%         auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
-%         
-%         sample(ix).auto = auto;
-%         [Nv,Nu,~] = size(sample(ix).auto);
-%         
-%         h=findobj('tag','auto_image');
-%         
-%         chx = get(ax3,'Children');
-%         if length(chx)>=2
-%             chx(end)=[];
-%             delete(chx)
-%         end
-%         axes(ax3)
-%         title('')
-%         
-%         set(h,'userdata',sample);
-%         set(h,'cdata',sample(ix).auto); % make fi
-%         
-%         set(findobj('tag','auto_axes'),'xlim',[-2 2+Nv],...
-%             'ylim',[-2 2+Nv])
-%         % on axes and labels
-%         % set(findobj('tag','image'),'xlim',[0.5 Nu+0.5],'ylim',[0.5 Nv+.5])
-%         grid off
-%         title('2D autocorrelation')
-%         
-%         set(findobj('tag','current_image'),'cdata',sample(ix).data);
-%         set(findobj('tag','current_image'),'userdata',sample);
-%         disp('... done!')
-%         
-%         clear k h hb FFTlogIm Nu Nv mag im auto nlags l centx centy
-        

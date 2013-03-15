@@ -80,7 +80,7 @@ if isempty(sample(ix).auto)
     axes(ax3)
     title('')
     
-    [Nv,Nu,~] = size(sample(ix).data);
+    [Nv,Nu,blank] = size(sample(ix).data);
     
     % calculate 2D autocorrel
     im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
@@ -99,7 +99,7 @@ if isempty(sample(ix).auto)
     auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
     
     sample(ix).auto = auto;
-    [Nv,~,~] = size(sample(ix).auto);
+    [Nv,blank,blank] = size(sample(ix).auto);
     
     h=findobj('tag','auto_image');
     
@@ -126,12 +126,12 @@ if ~isempty(sample(ix).dist)
     h=findobj('tag','auto_image');
     
     tmpimage=sample(ix).roi{1};
-    [Nv,Nu,~] = size(tmpimage);
+    [Nv,Nu,blank] = size(tmpimage);
     tmpimage=tmpimage(round((Nv/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nv/2)+sample(ix).percentiles(8)*1/sample(ix).resolution),...
         round((Nu/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nu/2)+sample(ix).percentiles(8)*1/sample(ix).resolution));
-    [Nv,Nu,~] = size(tmpimage);
+    [Nv,Nu,blank] = size(tmpimage);
     set(h,'cdata',tmpimage); % make fi
     axes(ax3)
     set(findobj('tag','auto_axes'),'xlim',[-2 2+Nv],...
@@ -152,7 +152,7 @@ else
         chx(end)=[];
         delete(chx)
     end
-    [Nv,~,~] = size(sample(ix).auto);
+    [Nv,blank,blank] = size(sample(ix).auto);
     
     h=findobj('tag','auto_image');
     
