@@ -1,4 +1,4 @@
- dgs-gui.m
+ dgs_gui.m
  
  Written by Daniel Buscombe, various times in 2012 and 2013
  while at
