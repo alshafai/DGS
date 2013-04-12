@@ -23,7 +23,7 @@
 
 dofilt=0;
 density=50;
-start_size=2;
+start_size=3;
 
 MotherWav='Morlet';
 Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
@@ -39,7 +39,9 @@ if sample(ix).num_roi>0
     h = waitbar(0,'Please wait...');
     for k=1:sample(ix).num_roi
         
-        [P{k},scale{k}]=get_psd(sample(ix).roi{k},density,Args);
+%         [P{k},scale{k}]=get_psd(sample(ix).roi{k},density,Args);
+        [P{k},scale{k}]=get_psd_quick(sample(ix).roi{k},density);
+        
         waitbar(k/sample(ix).num_roi,h)
         
     end
@@ -61,9 +63,11 @@ if sample(ix).num_roi>0
     else
         sample(ix).dist=[scalei(:).*sample(ix).resolution,D(:)];
     end
-    
-    index_keep=1:...
-        round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
+%     
+%     index_keep=1:...
+%         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
+%     
+    index_keep=[1:length(sample(ii).dist)];
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
@@ -78,7 +82,7 @@ if sample(ix).num_roi>0
     h=findobj('Tag','plot_axes');
     axes(h)
     cla(ax2)
-    bar(sample(ix).dist(:,1),sample(ix).dist(:,2))
+    bar(sample(ix).dist(1:end,1),sample(ix).dist(1:end,2))
     if sample(ix).resolution==1
         xlabel('Size (Pixels)')
     else

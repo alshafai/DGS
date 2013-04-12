@@ -51,6 +51,10 @@ end
 % a=get(findobj('tag','im_axes1'),'title');
 set(get(findobj('tag','im_axes1'),'title'),'string',char(sample(ix).name));
 
+set(ax,'ylim',[1,size(sample(ix).data,1)])
+set(ax,'xlim',[1,size(sample(ix).data,2)])
+
+
 % if navigating back, draw roi lines back on
 if sample(ix).num_roi>0
     for k=1:sample(ix).num_roi
@@ -59,15 +63,16 @@ if sample(ix).num_roi>0
 end
 
 % first set axes ticks to be increments of 500
-% set(ax,'ytick',(100:100:size(sample(ix).data,1)))
-% set(ax,'xtick',(100:100:size(sample(ix).data,2)))
+set(ax,'ytick',linspace(1,size(sample(ix).data,1),5))
+set(ax,'xtick',linspace(1,size(sample(ix).data,2),5))
 % scale current x and y labels
 set(ax,'xticklabels',num2str(get(ax,'xtick')'.*sample(ix).resolution))
 set(ax,'yticklabels',num2str(get(ax,'ytick')'.*sample(ix).resolution))
 
+
 if isfield(sample(ix),'roi_line')
     sample(ix).roi_line{1} = line(sample(ix).roi_x{1},...
-        sample(ix).roi_y{1},'color','red','linewidth',2);
+        sample(ix).roi_y{1},'color','red','linewidth',5);
 end
 
 if isempty(sample(ix).auto)

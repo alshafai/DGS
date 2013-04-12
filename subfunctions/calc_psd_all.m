@@ -23,7 +23,7 @@
 
 dofilt=0;
 density=50;
-start_size=2;
+start_size=3;
 
 MotherWav='Morlet';
 Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
@@ -48,7 +48,9 @@ else
             
             for k=1:sample(ii).num_roi
                 
-                [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
+%                 [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
+                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
+
             end
             
             %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
@@ -70,7 +72,7 @@ else
                 d=D(:); d(isnan(d))=0;
                 sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
             end
-%             
+            
 %             index_keep=1:...
 %                 round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.99));
 %             
@@ -108,7 +110,14 @@ if ~isempty(sample(ix).dist)
     h=findobj('Tag','plot_axes');
     axes(h)
     cla(ax2)
-    bar(sample(ix).dist(:,1),sample(ix).dist(:,2))
+    
+    bar(sample(ix).dist(1:end,1),sample(ix).dist(1:end,2));
+    xlabs=get(ax2,'XTickLabel'); xlabs=str2num(xlabs);
+    if xlabs(1)==0
+        xlabs(1)=sample(ix).dist(1,1);  
+        xlabs=num2str(xlabs); set(ax2,'XTickLabel',xlabs)
+    end
+    
     if sample(ix).resolution==1
         xlabel('Size (Pixels)')
     else

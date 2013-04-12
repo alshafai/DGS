@@ -99,3 +99,11 @@ if max(scale) > (cols/3)
 end
 P1=P1./sum(P1);
 
+P1(1)=P1(1)/10;
+P1=P1./sum(P1);
+
+
+
+
+
+

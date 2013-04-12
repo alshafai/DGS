@@ -1,7 +1,5 @@
 %save_psd.m
-% dgs_gui_swopsimages
-% callback for main program, swops images
-% 
+%
 % Written by Daniel Buscombe, various times in 2012 and 2013
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
@@ -39,10 +37,11 @@ for ii=1:length(sample)
         
         outfile=[pwd,filesep,'outputs',filesep,'data',...
             filesep,sample(ii).name(1:regexp(sample(ii).name,'\.')-1),'_summ.csv'];
-        if exist(outfile,'file')==2
-            delete(outfile)
-        end
-        
+%         if exist(outfile,'file')==2
+%             delete(outfile)
+%         end       
+        outfile=check_savedfile(outfile,'csv');
+
         fid=fopen(outfile,'wt');
         
         x=heads;

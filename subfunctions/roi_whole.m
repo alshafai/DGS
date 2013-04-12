@@ -55,8 +55,8 @@ if strcmp(ButtonName,'Yes')
                 
                 sample(ii).num_roi=1;
                 sample(ii).roi{1}=sample(ii).data;
-                sample(ii).roi_x{1}=[1 size(sample(ii).data,2) size(sample(ii).data,2) 1 1];
-                sample(ii).roi_y{1}=[1 1 size(sample(ii).data,1) size(sample(ii).data,1) 1];
+                sample(ii).roi_x{1}=[2 size(sample(ii).data,2)-1 size(sample(ii).data,2)-1 2 2];
+                sample(ii).roi_y{1}=[2 2 size(sample(ii).data,1)-1 size(sample(ii).data,1)-1 2];
                 
                 
                 % make a flag which says what has been done, in order to remove it for
