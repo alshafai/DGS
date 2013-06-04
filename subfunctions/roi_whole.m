@@ -91,8 +91,8 @@ if strcmp(ButtonName,'Yes')
             
             sample(ix).num_roi=1;
             sample(ix).roi{1}=sample(ix).data;
-            sample(ix).roi_x{1}=[1 size(sample(ix).data,2) size(sample(ix).data,2) 1 1];
-            sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1) size(sample(ix).data,1) 1];
+            sample(ix).roi_x{1}=[1 size(sample(ix).data,2)-1 size(sample(ix).data,2)-1 1 1];
+            sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1)-1 size(sample(ix).data,1)-1 1];
             
             % make a flag which says what has been done, in order to remove it for
             % subsequent roi draws

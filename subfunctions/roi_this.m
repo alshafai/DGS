@@ -40,18 +40,22 @@ if ~isfield(sample(ix),'whole_roi') && sample(ix).whole_roi~=1
     axes(ax)
 end
 
+
+[Nv,Nu,blank] = size(sample(1).data);
+set(ax,'xlim',[-2 Nu+2],'ylim',[-2 Nv+2])
+
 sample(ix).whole_roi=0;
 
 sample(ix).num_roi=sample(ix).num_roi+1;
 
-[blank,rectpos]=crop_image(ax);
-%rectpos=round(getrect(ax));
+%[blank,rectpos]=crop_image(ax);
+rectpos=round(getrect(ax));
 
 % define the points for the line to be drawn
-sample(ix).roi_x{sample(ix).num_roi} =[rectpos(1), rectpos(1)+rectpos(3), rectpos(1)+rectpos(3), ...
-    rectpos(1), rectpos(1)];
-sample(ix).roi_y{sample(ix).num_roi} = [rectpos(2), rectpos(2), rectpos(2)+rectpos(4), ...
-    rectpos(2)+rectpos(4), rectpos(2)];
+sample(ix).roi_x{sample(ix).num_roi} =round([rectpos(1), rectpos(1)+rectpos(3), rectpos(1)+rectpos(3), ...
+    rectpos(1), rectpos(1)]);
+sample(ix).roi_y{sample(ix).num_roi} = round([rectpos(2), rectpos(2), rectpos(2)+rectpos(4), ...
+    rectpos(2)+rectpos(4), rectpos(2)]);
 sample(ix).roi_line{sample(ix).num_roi} = line(sample(ix).roi_x{sample(ix).num_roi},...
     sample(ix).roi_y{sample(ix).num_roi},'color','red','linewidth',2);
 

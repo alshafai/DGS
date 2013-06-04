@@ -71,8 +71,10 @@ set(ax,'yticklabels',num2str(get(ax,'ytick')'.*sample(ix).resolution))
 
 
 if isfield(sample(ix),'roi_line')
+    if iscell(sample(ix).roi_line)
     sample(ix).roi_line{1} = line(sample(ix).roi_x{1},...
         sample(ix).roi_y{1},'color','red','linewidth',5);
+    end
 end
 
 if isempty(sample(ix).auto)

@@ -75,15 +75,6 @@ if length(sample)>1
                 
                 sample(ii).flattened = 1;
                 
-%                for k=1:sample(ii).num_roi
-%                    sample(ii).roi{k}=sample(ix).data(min(sample(ii).roi_y{k}):...
-%                        max(sample(ii).roi_y{k}),...
-%                        min(sample(ii).roi_x{k}):...
-%                        max(sample(ii).roi_x{k}));
-%                end
-                
-                
-                %         set(findobj('tag','current_image'),'userdata',sample);
                 disp('... done!')
                 
                 clear h k Nu Nv mag im auto nlags l centx centy

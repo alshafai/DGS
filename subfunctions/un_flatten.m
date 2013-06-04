@@ -27,17 +27,21 @@ sample=get(findobj('tag','current_image'),'userdata');
 
 if sample(ix).flattened %|| ~sample(ix).filtered
     
+    
     if isfield(sample(ix),'orig_data')
         sample(ix).data=sample(ix).orig_data;
         sample(ix).orig_data=[];
     end
     sample(ix).flattened = 0;
     
-    sample=get(findobj('tag','current_image'),'userdata');
+    set(findobj('tag','current_image'),'cdata',sample(ix).data);
+    set(findobj('tag','current_image'),'userdata',sample);
 
     if isempty(sample(ix).data)
         dgs_gui_swopsimages
     end
+    
+    sample=get(findobj('tag','current_image'),'userdata');
     
     for k=1:sample(ix).num_roi
         sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
