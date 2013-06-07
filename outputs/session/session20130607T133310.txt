@@ -1,4 +1,0 @@
-%session began at 2013-06-07 13:33:10
-%------------------------
-%User selected /media/SILVERSURFER/github_projects/DGS_gui/images/130607-121040.jpg
-%User selected /media/SILVERSURFER/github_projects/DGS_gui/images/130607-121049.jpg
