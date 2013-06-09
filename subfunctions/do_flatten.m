@@ -39,8 +39,12 @@ if length(sample)>1
                 if isempty(sample(ii).data)
                     sample(ii).data=imread([image_path char(image_name(ii))]);
                     
+                if numel(size(sample(ii).data))==3
                     sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
                         sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+                else
+                    sample(ii).data=double(sample(ii).data);
+                end
                     
                 end
                 

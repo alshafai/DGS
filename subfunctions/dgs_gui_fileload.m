@@ -37,8 +37,12 @@ else % cancel button not pressed
         F{1}=[image_path,image_name];
         
         sample(1).data=imread([image_path image_name]);
+        if numel(size(sample(1).data))==3
         sample(1).data=double(0.299 * sample(1).data(:,:,1) + 0.5870 * ...
             sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
+        else
+            sample(1).data=double(sample(1).data);
+        end
         sample(1).name=image_name;
         sample(1).num_roi=0;
         sample(1).whole_roi=0;
