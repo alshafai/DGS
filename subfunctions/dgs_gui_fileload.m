@@ -41,6 +41,10 @@ else % cancel button not pressed
             sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
         sample(1).name=image_name;
         sample(1).num_roi=0;
+        sample(1).whole_roi=0;
+        sample(1).roi={};
+        sample(1).roi_x={};
+        sample(1).roi_y={};
         sample(1).resolution=1;
         sample(1).flattened=0;
         sample(1).filtered=0;
@@ -60,6 +64,10 @@ else % cancel button not pressed
             'name',cell(1,length(image_name)),...
             'resolution',cell(1,length(image_name)),....
             'num_roi',cell(1,length(image_name)),....
+            'whole_roi',cell(1,length(image_name)),....
+            'roi',cell(1,length(image_name)),...
+            'roi_y',cell(1,length(image_name)),...
+            'roi_x',cell(1,length(image_name)),...
             'flattened',cell(1,length(image_name)),....
             'filtered',cell(1,length(image_name)),...
             'filt1',cell(1,length(image_name)),...
@@ -77,18 +85,28 @@ else % cancel button not pressed
             fprintf(fid,'%s\n',['%User selected ', ff]);
             F{i}=ff;
         end
-        
-        
+       
         % load first two images only
         sample(1).data=imread([image_path char(image_name(1))]);
         %                 sample(1).data=imread([image_path image_name]);
+        
+        
+        if numel(size(sample(1).data))==3
         sample(1).data=double(0.299 * sample(1).data(:,:,1) + 0.5870 * ...
             sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
+        
+        else
+        sample(1).data=double(sample(1).data);    
+        end
+           
         
         for i=1:length(image_name)
             %         sample(i).data=imread([image_path char(image_name(i))]);
             sample(i).name=char(image_name(i));
             sample(i).num_roi=0;
+%             sample(i).roi={};
+%             sample(i).roi_x={};
+%             sample(i).roi_y={};
             sample(i).resolution=1;
             sample(i).flattened=0;
             sample(i).filtered=0;

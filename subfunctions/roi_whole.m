@@ -38,8 +38,12 @@ if strcmp(ButtonName,'Yes')
                 if isempty(sample(ii).data)
                     sample(ii).data=imread([image_path char(image_name(ii))]);
                     
-                    sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
-                        sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+                    if numel(size(sample(ii).data))==3
+                        sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
+                            sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+                    else
+                        sample(ii).data=double(sample(ii).data);
+                    end
                     
                 end
                 
@@ -91,8 +95,8 @@ if strcmp(ButtonName,'Yes')
             
             sample(ix).num_roi=1;
             sample(ix).roi{1}=sample(ix).data;
-            sample(ix).roi_x{1}=[1 size(sample(ix).data,2) size(sample(ix).data,2) 1 1];
-            sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1) size(sample(ix).data,1) 1];
+            sample(ix).roi_x{1}=[1 size(sample(ix).data,2)-1 size(sample(ix).data,2)-1 1 1];
+            sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1)-1 size(sample(ix).data,1)-1 1];
             
             % make a flag which says what has been done, in order to remove it for
             % subsequent roi draws

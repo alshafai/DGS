@@ -30,8 +30,12 @@ sample=get(findobj('tag','current_image'),'userdata');
 if isempty(sample(ix).data)
     sample(ix).data=imread([image_path char(image_name(ix))]);
     
-    sample(ix).data=double(0.299 * sample(ix).data(:,:,1) + 0.5870 * ...
-        sample(ix).data(:,:,2) + 0.114 * sample(ix).data(:,:,3));
+    if numel(size(sample(ix).data))==3
+        sample(ix).data=double(0.299 * sample(ix).data(:,:,1) + 0.5870 * ...
+            sample(ix).data(:,:,2) + 0.114 * sample(ix).data(:,:,3));
+    else
+        sample(ix).data=double(sample(ix).data);
+    end
     
 end
 
@@ -71,8 +75,10 @@ set(ax,'yticklabels',num2str(get(ax,'ytick')'.*sample(ix).resolution))
 
 
 if isfield(sample(ix),'roi_line')
+    if iscell(sample(ix).roi_line)
     sample(ix).roi_line{1} = line(sample(ix).roi_x{1},...
         sample(ix).roi_y{1},'color','red','linewidth',5);
+    end
 end
 
 if isempty(sample(ix).auto)

@@ -39,8 +39,8 @@ if sample(ix).num_roi>0
     h = waitbar(0,'Please wait...');
     for k=1:sample(ix).num_roi
         
-%         [P{k},scale{k}]=get_psd(sample(ix).roi{k},density,Args);
-        [P{k},scale{k}]=get_psd_quick(sample(ix).roi{k},density);
+        [P{k},scale{k}]=get_psd(sample(ix).roi{k},density,Args);
+%         [P{k},scale{k}]=get_psd_quick(sample(ix).roi{k},density);
         
         waitbar(k/sample(ix).num_roi,h)
         
@@ -67,7 +67,7 @@ if sample(ix).num_roi>0
 %     index_keep=1:...
 %         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
 %     
-    index_keep=[1:length(sample(ii).dist)];
+    index_keep=[1:length(sample(ix).dist)];
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));

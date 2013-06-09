@@ -48,8 +48,8 @@ else
             
             for k=1:sample(ii).num_roi
                 
-%                 [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
-                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
+                 [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
+%                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
 
             end
             
