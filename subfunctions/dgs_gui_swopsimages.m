@@ -53,11 +53,17 @@ end
 
 % update title
 % a=get(findobj('tag','im_axes1'),'title');
-set(get(findobj('tag','im_axes1'),'title'),'string',char(sample(ix).name));
+% set(get(findobj('tag','im_axes1'),'title'),'string',char(sample(ix).name));
+
+h=findobj('tag','current_image');
+set(h,'cdata',sample(ix).data); % make first image appear
+
+[Nv,Nu,blank] = size(sample(ix).data);
+set(h,'xdata',1:Nu); % scales and labels
+set(h,'ydata',1:Nv);
 
 set(ax,'ylim',[1,size(sample(ix).data,1)])
 set(ax,'xlim',[1,size(sample(ix).data,2)])
-
 
 % if navigating back, draw roi lines back on
 if sample(ix).num_roi>0
@@ -67,12 +73,12 @@ if sample(ix).num_roi>0
 end
 
 % first set axes ticks to be increments of 500
-set(ax,'ytick',linspace(1,size(sample(ix).data,1),5))
-set(ax,'xtick',linspace(1,size(sample(ix).data,2),5))
+set(ax,'ytick',linspace(1,size(sample(ix).data,1),2))
+set(ax,'xtick',linspace(1,size(sample(ix).data,2),2))
 % scale current x and y labels
 set(ax,'xticklabels',num2str(get(ax,'xtick')'.*sample(ix).resolution))
 set(ax,'yticklabels',num2str(get(ax,'ytick')'.*sample(ix).resolution))
-
+% axis tight
 
 if isfield(sample(ix),'roi_line')
     if iscell(sample(ix).roi_line)
