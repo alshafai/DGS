@@ -20,6 +20,7 @@
 %   For more information, see the official USGS copyright policy at 
 %   http://www.usgs.gov/visual-id/credit_usgs.html#copyright
 %====================================
+mkdir([pwd,filesep,'outputs',filesep,'prints'])
 
 for ii=1:length(sample)
     

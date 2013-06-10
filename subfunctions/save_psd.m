@@ -19,6 +19,8 @@
 %   http://www.usgs.gov/visual-id/credit_usgs.html#copyright
 %====================================
 
+mkdir([pwd,filesep,'outputs',filesep,'data'])
+
 csvFunHead = @(str)sprintf('%s,',str); % for strinsg in strings
 csvFunBody = @(str)sprintf('%f,',str); % for numbers in strings
 zeroFun = @(x)x==0; % for converting zeros to nans
