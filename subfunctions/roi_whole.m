@@ -46,9 +46,20 @@ if strcmp(ButtonName,'Yes')
                     end
                     
                 end
+                im=sample(ii).data;
+                [n,m,p] = size(im);
+                % cosine taper
+                w = .25; % width of cosine in percent of width of X
+                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                
+                for i = 1:p
+                    im(:,:,i) = im(:,:,i).*window;
+                end
+                sample(ii).data=im;
+                
                 
                 % first remove previous rois
-                if sample(ii).num_roi>0 && sample(ix).whole_roi~=1
+                if sample(ii).num_roi>0 && sample(ii).whole_roi~=1
                     for k=1:sample(ii).num_roi
                         sample(ii).roi{k}=[];
                         sample(ii).roi_x{k}=[];

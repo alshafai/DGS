@@ -38,11 +38,23 @@ else % cancel button not pressed
         
         sample(1).data=imread([image_path image_name]);
         if numel(size(sample(1).data))==3
-        sample(1).data=double(0.299 * sample(1).data(:,:,1) + 0.5870 * ...
-            sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
+            sample(1).data=double(0.299 * sample(1).data(:,:,1) + 0.5870 * ...
+                sample(1).data(:,:,2) + 0.114 * sample(1).data(:,:,3));
         else
             sample(1).data=double(sample(1).data);
         end
+        
+        im=sample(1).data;
+        [n,m,p] = size(im);
+        % cosine taper
+        w = .25;
+        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+        
+        for i = 1:p
+            im(:,:,i) = im(:,:,i).*window;
+        end
+        sample(1).data=im;
+        
         sample(1).name=image_name;
         sample(1).num_roi=0;
         sample(1).whole_roi=0;
@@ -102,6 +114,17 @@ else % cancel button not pressed
         else
         sample(1).data=double(sample(1).data);    
         end
+        
+        im=sample(1).data;
+        [n,m,p] = size(im);
+        % cosine taper
+        w = .25; % width of cosine in percent of width of X
+        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+        
+        for i = 1:p
+            im(:,:,i) = im(:,:,i).*window;
+        end
+        sample(1).data=im;
            
         
         for i=1:length(image_name)
@@ -150,6 +173,7 @@ colormap gray
 
 % calculate 2D autocorrel
 im=sample(1).data(1:min(Nu,Nv),1:min(Nu,Nv));
+
 % 2D-FFT transform on de-meaned image
 % power spectrum
 mag=abs(fft2(fftshift(im-mean(im(:))))).^2;

@@ -39,15 +39,27 @@ if length(sample)>1
                 if isempty(sample(ii).data)
                     sample(ii).data=imread([image_path char(image_name(ii))]);
                     
-                if numel(size(sample(ii).data))==3
-                    sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
-                        sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
-                else
-                    sample(ii).data=double(sample(ii).data);
-                end
-
+                    if numel(size(sample(ii).data))==3
+                        sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
+                            sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+                    else
+                        sample(ii).data=double(sample(ii).data);
+                    end
+                    
                     
                 end
+                
+                
+                im=sample(ii).data;
+                [n,m,p] = size(im);
+                % cosine taper
+                w = .25; % width of cosine in percent of width of X
+                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                
+                for i = 1:p
+                    im(:,:,i) = im(:,:,i).*window;
+                end
+                sample(ii).data=im;
                 
                 [rows,cols] = size(sample(ii).data);
                 sample(ix).orig_data=sample(ii).data;

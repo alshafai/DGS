@@ -37,6 +37,17 @@ if isempty(sample(ix).data)
         sample(ix).data=double(sample(ix).data);
     end
     
+    im=sample(ix).data;
+    [n,m,p] = size(im);
+    % cosine taper
+    w = .25; % width of cosine in percent of width of X
+    window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+    
+    for i = 1:p
+        im(:,:,i) = im(:,:,i).*window;
+    end
+    sample(ix).data=im;
+    
 end
 
 set(findobj('tag','current_image'),'cdata',sample(ix).data);
