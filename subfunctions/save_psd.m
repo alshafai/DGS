@@ -30,7 +30,7 @@ for ii=1:length(sample)
     
     if ~isempty(sample(ii).dist)
         
-        numhead=num2cell(sample(ii).dist(:,1)');
+        numhead=num2cell(sample(ii).scale); %dist(:,1)');
         numhead(cell2mat(cellfun(zeroFun,numhead,'UniformOutput',0)))={NaN};
         heads={'image','arith_mean','arith_sort','arith_skew','arith_kurt',...
             'geom_mean','geom_sort','geom_skew','geom_kurt',...
