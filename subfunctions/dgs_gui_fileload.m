@@ -45,6 +45,8 @@ else % cancel button not pressed
         end
         
         im=sample(1).data;
+        
+        try
         [n,m,p] = size(im);
         % cosine taper
         w = .25;
@@ -53,6 +55,10 @@ else % cancel button not pressed
         for i = 1:p
             im(:,:,i) = im(:,:,i).*window;
         end
+        catch
+           continue
+        end
+   
         sample(1).data=im;
         
         sample(1).name=image_name;
@@ -116,6 +122,8 @@ else % cancel button not pressed
         end
         
         im=sample(1).data;
+
+        try
         [n,m,p] = size(im);
         % cosine taper
         w = .25; % width of cosine in percent of width of X
@@ -125,7 +133,9 @@ else % cancel button not pressed
             im(:,:,i) = im(:,:,i).*window;
         end
         sample(1).data=im;
-           
+        catch
+           continue
+        end
         
         for i=1:length(image_name)
             %         sample(i).data=imread([image_path char(image_name(i))]);
