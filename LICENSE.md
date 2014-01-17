@@ -19,6 +19,8 @@
    http://www.usgs.gov/visual-id/credit_usgs.html#copyright
 ====================================
 
+Buscombe, D. (2013) Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces and Thin Sections, and Other Natural Granular Patterns, Sedimentology 60, 1709 - 1732
+
 The following matlab files are distributed under the MIT software license (http://opensource.org/licenses/MIT):
 
     subfunctions/highboostfilter.m

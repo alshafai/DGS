@@ -8,7 +8,7 @@ dgs_gui
 
 
 This program implements the algorithm of 
-Buscombe, D. (2013, in press) Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces and Thin Sections, and Other Natural Granular Patterns, Sedimentology
+Buscombe, D. (2013) Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces and Thin Sections, and Other Natural Granular Patterns, Sedimentology 60, 1709 - 1732
  
 Written by Daniel Buscombe, various times in 2012 and 2013
 while at
