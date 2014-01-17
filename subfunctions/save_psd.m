@@ -25,12 +25,18 @@ csvFunHead = @(str)sprintf('%s,',str); % for strinsg in strings
 csvFunBody = @(str)sprintf('%f,',str); % for numbers in strings
 zeroFun = @(x)x==0; % for converting zeros to nans
 
+outall=[pwd,filesep,'outputs',filesep,'data',...
+            filesep,sample(1).name(1:regexp(sample(1).name,'\.')-1),'_',...
+            sample(end).name(1:regexp(sample(end).name,'\.')-1),'_summ.csv'];
+fid1=fopen(outall,'wt');
+
+        
 towrite=[];
 for ii=1:length(sample)
     
     if ~isempty(sample(ii).dist)
         
-        numhead=num2cell(sample(ii).scale); %dist(:,1)');
+        numhead=num2cell(sample(ii).dist(:,1)');
         numhead(cell2mat(cellfun(zeroFun,numhead,'UniformOutput',0)))={NaN};
         heads={'image','arith_mean','arith_sort','arith_skew','arith_kurt',...
             'geom_mean','geom_sort','geom_skew','geom_kurt',...
@@ -57,6 +63,10 @@ for ii=1:length(sample)
         xchar2 = strcat(xchar2(1:end-1),'\r\n');
         fprintf(fid,[xchar,',',xchar2]);
         fprintf(fid,'\r\n');
+        if ii==1
+            fprintf(fid1,[xchar,',',xchar2]);
+            fprintf(fid1,'\r\n');
+        end
         clear xchar xchar2 numhead x heads
         
         if sample(ii).resolution~=1 %assumes length unit is mm
@@ -84,6 +94,9 @@ for ii=1:length(sample)
         xchar2 = strcat(xchar2(1:end-1));
         
         fprintf(fid,[xchar2,',',xchar]);
+        
+        fprintf(fid1,[xchar2,',',xchar]);
+
         clear xchar xchar2 towrite x
         
     end
@@ -92,6 +105,9 @@ for ii=1:length(sample)
     disp(['Results saved to ... ',outfile])
     
 end
+
+fclose(fid1);
+
 
 uiwait(msgbox('Results saved ','','modal'));
 

@@ -32,6 +32,8 @@ if strcmp(ButtonName,'Yes')
         
         if strcmp(ButtonName,'Yes')
             
+            wh = waitbar(0,'Please wait, applying ROIs ...');
+
             for ii=1:length(sample)
                 
                 % read data in if not already done so
@@ -48,13 +50,33 @@ if strcmp(ButtonName,'Yes')
                 end
                 im=sample(ii).data;
                 [n,m,p] = size(im);
-                % cosine taper
-                w = .25; % width of cosine in percent of width of X
-                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
                 
-                for i = 1:p
-                    im(:,:,i) = im(:,:,i).*window;
+                
+                try
+                    [n,m,p] = size(im);
+                    
+                    v = ver;
+                    if any(strcmp('Statistics Toolbox', {v.Name}))
+                        % cosine taper
+                        w = .25;
+                        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                        
+                        for i = 1:p
+                            im(:,:,i) = im(:,:,i).*window;
+                        end
+                    end
+                catch
+                    continue
                 end
+                
+                
+                %                 % cosine taper
+                %                 w = .25; % width of cosine in percent of width of X
+                %                 window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                %
+                %                 for i = 1:p
+                %                     im(:,:,i) = im(:,:,i).*window;
+                %                 end
                 sample(ii).data=im;
                 
                 
@@ -81,7 +103,9 @@ if strcmp(ButtonName,'Yes')
                 sample(ii).roi_line{1} = line(sample(ii).roi_x{1},...
                     sample(ii).roi_y{1},'color','red','linewidth',2);
                 
+                waitbar(ii/length(sample),wh)
             end
+            close(wh)
             
             
         else
@@ -128,6 +152,14 @@ if strcmp(ButtonName,'Yes')
         
     end
     
+end
+
+
+for ii=1:length(sample)
+    sample(ii).roi(cellfun(@isempty,sample(ii).roi))=[];
+    sample(ii).roi_x(cellfun(@isempty,sample(ii).roi_x))=[];
+    sample(ii).roi_y(cellfun(@isempty,sample(ii).roi_y))=[];
+    sample(ii).roi_line(cellfun(@isempty,sample(ii).roi_line))=[];    
 end
 
 chx = get(ax,'Children');

@@ -47,16 +47,20 @@ else % cancel button not pressed
         im=sample(1).data;
         
         try
-        [n,m,p] = size(im);
-        % cosine taper
-        w = .25;
-        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-        
-        for i = 1:p
-            im(:,:,i) = im(:,:,i).*window;
-        end
+            [n,m,p] = size(im);
+            
+            v = ver;
+            if any(strcmp('Statistics Toolbox', {v.Name}))
+                % cosine taper
+                w = .25;
+                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                
+                for i = 1:p
+                    im(:,:,i) = im(:,:,i).*window;
+                end
+            end
         catch
-           continue
+            continue
         end
    
         sample(1).data=im;
@@ -124,18 +128,23 @@ else % cancel button not pressed
         im=sample(1).data;
 
         try
-        [n,m,p] = size(im);
-        % cosine taper
-        w = .25; % width of cosine in percent of width of X
-        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-        
-        for i = 1:p
-            im(:,:,i) = im(:,:,i).*window;
-        end
-        sample(1).data=im;
+            [n,m,p] = size(im);
+            
+            v = ver;
+            if any(strcmp('Statistics Toolbox', {v.Name}))
+                % cosine taper
+                w = .25;
+                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                
+                for i = 1:p
+                    im(:,:,i) = im(:,:,i).*window;
+                end
+            end
         catch
-           continue
-        end
+            continue
+        end        
+        
+        sample(1).data=im;
         
         for i=1:length(image_name)
             %         sample(i).data=imread([image_path char(image_name(i))]);

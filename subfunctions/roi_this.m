@@ -64,11 +64,107 @@ sample(ix).roi{sample(ix).num_roi}=sample(ix).data(min(sample(ix).roi_y{sample(i
     min(sample(ix).roi_x{sample(ix).num_roi}):...
     max(sample(ix).roi_x{sample(ix).num_roi}));
 
-clear rectpos
+ButtonName = questdlg('Apply this ROI to all images?','ROI', ...
+    'Yes','No', 'Yes');
+
+if strcmp(ButtonName,'Yes')
+    
+    wh = waitbar(0,'Please wait, applying ROIs ...');
+    
+    for ii=2:length(sample)
+        
+        % read data in if not already done so
+        if isempty(sample(ii).data)
+            sample(ii).data=imread([image_path char(image_name(ii))]);
+            
+            if numel(size(sample(ii).data))==3
+                sample(ii).data=double(0.299 * sample(ii).data(:,:,1) + 0.5870 * ...
+                    sample(ii).data(:,:,2) + 0.114 * sample(ii).data(:,:,3));
+            else
+                sample(ii).data=double(sample(ii).data);
+            end
+            
+        end
+        im=sample(ii).data;
+        [n,m,p] = size(im);
+        
+        
+        try
+            [n,m,p] = size(im);
+            
+            v = ver;
+            if any(strcmp('Statistics Toolbox', {v.Name}))
+                % cosine taper
+                w = .25;
+                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+                
+                for i = 1:p
+                    im(:,:,i) = im(:,:,i).*window;
+                end
+            end
+        catch
+            continue
+        end
+        
+        sample(ii).data=im;
+        
+        
+        % first remove previous rois
+        if sample(ii).num_roi>0 % && sample(ii).whole_roi~=1
+            for k=1:sample(ii).num_roi
+                sample(ii).roi{k}=[];
+                sample(ii).roi_x{k}=[];
+                sample(ii).roi_y{k}=[];
+                sample(ii).roi_line{k}=[];
+            end
+        end
+        
+        try
+            
+            sample(ii).num_roi=1;
+            
+            % define the points for the line to be drawn
+            sample(ii).roi_x{sample(ii).num_roi} =round([rectpos(1), rectpos(1)+rectpos(3), rectpos(1)+rectpos(3), ...
+                rectpos(1), rectpos(1)]);
+            sample(ii).roi_y{sample(ii).num_roi} = round([rectpos(2), rectpos(2), rectpos(2)+rectpos(4), ...
+                rectpos(2)+rectpos(4), rectpos(2)]);
+            sample(ii).roi_line{sample(ii).num_roi} = line(sample(ii).roi_x{sample(ii).num_roi},...
+                sample(ii).roi_y{sample(ii).num_roi},'color','red','linewidth',2);
+            
+            sample(ii).roi{sample(ii).num_roi}=sample(ii).data(min(sample(ii).roi_y{sample(ii).num_roi}):...
+                max(sample(ii).roi_y{sample(ii).num_roi}),...
+                min(sample(ii).roi_x{sample(ii).num_roi}):...
+                max(sample(ii).roi_x{sample(ii).num_roi}));
+        catch
+            disp(['Image ',num2str(ii),' is a different size, ROI not applied'])
+            for k=1:sample(ii).num_roi
+                sample(ii).roi{k}=[];
+                sample(ii).roi_x{k}=[];
+                sample(ii).roi_y{k}=[];
+                sample(ii).roi_line{k}=[];
+                sample(ii).num_roi=0;
+            end
+        end
+        waitbar(ii/length(sample),wh)
+        
+    end
+    close(wh)
+    
+    
+end
+
+for ii=1:length(sample)
+    sample(ii).roi(cellfun(@isempty,sample(ii).roi))=[];
+    sample(ii).roi_x(cellfun(@isempty,sample(ii).roi_x))=[];
+    sample(ii).roi_y(cellfun(@isempty,sample(ii).roi_y))=[];
+    sample(ii).roi_line(cellfun(@isempty,sample(ii).roi_line))=[];    
+end
+
 
 set(findobj('tag','current_image'),'userdata',sample);
-
 
 if ~isempty(sample(ix).dist)
     uiwait(msgbox('... remember to calculate size distribution again!','New ROIs defined ...','modal'));
 end
+
+clear rectpos
