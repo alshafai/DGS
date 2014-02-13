@@ -50,7 +50,7 @@ for j=1:density:rows
     f = fft(Y);    % [Eqn(3)]
     
     %....construct SCALE array & empty PERIOD & WAVE arrays
-    scale = Args.S0*2.^((0:J1)*Args.Dj);
+    scale = (1/pi).*(Args.S0*2.^((0:J1)*Args.Dj));
     wave = zeros(J1+1,n);  % define the wavelet array
     wave = wave + 1i*wave;  % make it complex
     % loop through all scales and compute transform
@@ -76,13 +76,15 @@ for j=1:density:rows
         smooth=ifft(F.*fft(wave(ii,:),npad));
         twave(ii,:)=smooth(1:cols);
     end
-    scale=scale./2;
+    %scale=scale./2;
     
     if isreal(wave)
         twave=real(twave);
     end
     
-    W1{j}=var(twave,[],2);
+    %W1{j}=var(twave,[],2);
+    n = (0:length(scale)-1)'-(length(scale)-1)/2;
+    W1{j}=var(twave,[],2).*exp(-(1/2)*((pi/2)*n/((length(scale)-1)/2)).^2);
     
     keep W1 j himt rows cols Args scale
     
