@@ -51,7 +51,7 @@ for j=1:density:rows
         continue
     end
 end
-scale=scale./2;
+scale=(1/pi).*scale;
 
 P1=var(wave,[],2);
 P1=P1./sum(P1);
@@ -65,6 +65,10 @@ P1=P1./sum(P1);
 % P1=P1./sum(P1);
 
 P1(1)=P1(1)/10;
+
+n = (0:length(scale)-1)'-(length(scale)-1)/2;
+P1 = P1*exp(-(1/2)*((pi/2)*n/((length(scale)-1)/2)).^2);
+
 P1=P1./sum(P1);
 
 delete fort.6 im.dat
