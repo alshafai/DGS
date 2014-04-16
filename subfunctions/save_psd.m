@@ -96,13 +96,14 @@ for ii=1:length(sample)
         fprintf(fid,[xchar2,',',xchar]);
         
         fprintf(fid1,[xchar2,',',xchar]);
-
+        
         clear xchar xchar2 towrite x
         
+        
+        fclose(fid);
+        disp(['Results saved to ... ',outfile])
+        
     end
-    
-    fclose(fid);
-    disp(['Results saved to ... ',outfile])
     
 end
 

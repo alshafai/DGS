@@ -155,12 +155,12 @@ if strcmp(ButtonName,'Yes')
 end
 
 
-for ii=1:length(sample)
-    sample(ii).roi(cellfun(@isempty,sample(ii).roi))=[];
-    sample(ii).roi_x(cellfun(@isempty,sample(ii).roi_x))=[];
-    sample(ii).roi_y(cellfun(@isempty,sample(ii).roi_y))=[];
-    sample(ii).roi_line(cellfun(@isempty,sample(ii).roi_line))=[];    
-end
+% for ii=1:length(sample)
+%     sample(ii).roi(cellfun(@isempty,sample(ii).roi))=[];
+%     sample(ii).roi_x(cellfun(@isempty,sample(ii).roi_x))=[];
+%     sample(ii).roi_y(cellfun(@isempty,sample(ii).roi_y))=[];
+%     sample(ii).roi_line(cellfun(@isempty,sample(ii).roi_line))=[];    
+% end
 
 chx = get(ax,'Children');
 if length(chx)>=2
