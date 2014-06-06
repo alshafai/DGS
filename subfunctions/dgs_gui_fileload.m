@@ -108,7 +108,7 @@ else % cancel button not pressed
         for i=1:size(image_name,2)
             ff=fullfile(image_path, char(image_name(i)));
             disp(['User selected ', ff]);
-            fprintf(fid,'%s\n',['%User selected ', ff]);
+            %fprintf(fid,'%s\n',['%User selected ', ff]);
             F{i}=ff;
         end
        
