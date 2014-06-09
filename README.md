@@ -1,5 +1,7 @@
  dgs_gui.m
 
+Version 5.2 (June 2014)
+
 MATLAB software to calculate the grain size distribution from an image of sediment or other granular material
 
 To run the program, download and unzip, open MATLAB, cd to the DGS-master directory, then in the command window type:
@@ -9,8 +11,10 @@ dgs_gui
 
 This program implements the algorithm of 
 Buscombe, D. (2013) Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces and Thin Sections, and Other Natural Granular Patterns, Sedimentology 60, 1709 - 1732
+
+http://dbuscombe-usgs.github.io/docs/Buscombe2013_Sedimentology_sed12049.pdf
  
-Written by Daniel Buscombe, various times in 2012 and 2013
+Written by Daniel Buscombe, various times in 2012 - 2014
 while at
 School of Marine Science and Engineering, University of Plymouth, UK
 and now:
