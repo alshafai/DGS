@@ -2,7 +2,7 @@
 % dgs_gui_swopsimages
 % callback for main program, swops images
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -79,10 +79,6 @@ if length(chx)>=2
     chx(end)=[];
     delete(chx)
 end
-
-% update title
-% a=get(findobj('tag','im_axes1'),'title');
-% set(get(findobj('tag','im_axes1'),'title'),'string',char(sample(ix).name));
 
 h=findobj('tag','current_image');
 set(h,'cdata',sample(ix).data); % make first image appear
@@ -173,7 +169,7 @@ if ~isempty(sample(ix).dist)
     
     h=findobj('tag','auto_image');
     
-    tmpimage=sample(ix).roi{1};
+    tmpimage=sample(ix).data; %roi{1};
     [Nv,Nu,blank] = size(tmpimage);
     tmpimage=tmpimage(round((Nv/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nv/2)+sample(ix).percentiles(8)*1/sample(ix).resolution),...
@@ -253,5 +249,8 @@ set(findobj('tag','current_image'),'userdata',sample);
 clear chx k n Nu Nv mag im auto nlags l centx centy tmpimage h
 
 
+% update title
+% a=get(findobj('tag','im_axes1'),'title');
+% set(get(findobj('tag','im_axes1'),'title'),'string',char(sample(ix).name));
 
 

@@ -2,8 +2,8 @@
 A tool for the automated estimation of size-distribution in images 
 of sediment and other granular material
 
-Version 3.0
-Written by Daniel Buscombe, various times in 2012 and 2013
+Version 5.2 (June 2014)
+Written by Daniel Buscombe, various times in 2012 - 2014
 while at
 School of Marine Science and Engineering, University of Plymouth, UK
 then

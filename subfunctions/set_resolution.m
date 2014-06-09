@@ -3,7 +3,7 @@
 % set resolution to whatever is in the text box and update axes data and
 % plots accordingly
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -249,4 +249,4 @@ end
 % finally make ax the current axes, and submit sample to userdata
 axes(ax)
 set(findobj('tag','current_image'),'userdata',sample);
-
+clear ans

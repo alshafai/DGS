@@ -2,7 +2,7 @@
 % calc_psd_all
 % calculates PSD for each ROI for each image
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -22,7 +22,7 @@
 %====================================
 
 dofilt=0;
-density=50;
+density=20;
 start_size=3;
 
 MotherWav='Morlet';
@@ -48,10 +48,30 @@ else
             
             for k=1:sample(ii).num_roi
                 
-                 [P{k},scale{k}]=get_psd(sample(ii).roi{k},density,Args);
-%                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
-
+                [nx, ny]= size(sample(ii).data);
+                
+                if max(sample(ii).roi_x{sample(ii).num_roi})>ny
+                    f = find( sample(ii).roi_x{sample(ii).num_roi} > ny);
+                    sample(ii).roi_x{sample(ii).num_roi}(f) = ny;
+                end
+                
+                if max(sample(ii).roi_y{sample(ii).num_roi})>nx
+                    f = find( sample(ii).roi_y{sample(ii).num_roi} > nx);
+                    sample(ii).roi_y{sample(ii).num_roi}(f) = nx;
+                end
+                
+                
+                % introduce this as a temporary variable to reduce memory
+                tmp = sample(ii).data(min(sample(ii).roi_y{sample(ii).num_roi}):...
+                    max(sample(ii).roi_y{sample(ii).num_roi}),...
+                    min(sample(ii).roi_x{sample(ii).num_roi}):...
+                    max(sample(ii).roi_x{sample(ii).num_roi}));
+                
+                [P{k},scale{k}]=get_psd(tmp,density,Args); %sample(ii).roi{k}
+                %                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
+                
             end
+            clear tmp ans
             
             %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
             scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
@@ -141,7 +161,7 @@ if ~isempty(sample(ix).dist)
     
     h=findobj('tag','auto_image');
     
-    tmpimage=sample(ix).roi{1};
+    tmpimage=sample(ix).data; %roi{1};
     [Nv,Nu,blank] = size(tmpimage);
     tmpimage=tmpimage(round((Nv/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nv/2)+sample(ix).percentiles(8)*1/sample(ix).resolution),...

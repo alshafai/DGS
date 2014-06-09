@@ -2,7 +2,7 @@
 % un_flatten
 % reverses any previous flattening on this image
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -43,12 +43,12 @@ if sample(ix).flattened %|| ~sample(ix).filtered
     
     sample=get(findobj('tag','current_image'),'userdata');
     
-    for k=1:sample(ix).num_roi
-        sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
-            max(sample(ix).roi_y{k}),...
-            min(sample(ix).roi_x{k}):...
-            max(sample(ix).roi_x{k}));
-    end
+%     for k=1:sample(ix).num_roi
+%         sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
+%             max(sample(ix).roi_y{k}),...
+%             min(sample(ix).roi_x{k}):...
+%             max(sample(ix).roi_x{k}));
+%     end
     
     [Nv,Nu,blank] = size(sample(ix).data);
     % calculate 2D autocorrel

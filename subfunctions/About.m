@@ -4,8 +4,8 @@ About
 A tool for the automated estimation of size-distribution in images 
 of sediment and other granular material
 
-Version 3.0
-Written by Daniel Buscombe, various times in 2012 and 2013
+Version 5.2 (June 2014)
+Written by Daniel Buscombe, various times in 2012 - 2014
 while at
 School of Marine Science and Engineering, University of Plymouth, UK
 then
@@ -89,7 +89,7 @@ Advances in the Simulation and Automated Measurement of Well-Sorted Granular Mat
 Part 2: Direct Measures of Particle Properties. 
 Journal of Geophysical Research - Earth Surface 117, F02002
 
-4. Buscombe, D. (2013, in press) 
+4. Buscombe, D. (2013) 
 Transferable Wavelet Method for Grain-Size Distribution from Images of Sediment Surfaces 
 and Thin Sections, and Other Natural Granular Patterns
-Sedimentology, in press
+Sedimentology 60: 1709 - 1732 http://dbuscombe-usgs.github.io/docs/Buscombe2013_Sedimentology_sed12049.pdf

@@ -2,7 +2,7 @@
 % dgs_gui_fileload
 % loads images into the program
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -46,22 +46,22 @@ else % cancel button not pressed
         
         im=sample(1).data;
         
-        try
-            [n,m,p] = size(im);
-            
-            v = ver;
-            if any(strcmp('Statistics Toolbox', {v.Name}))
-                % cosine taper
-                w = .25;
-                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-                
-                for i = 1:p
-                    im(:,:,i) = im(:,:,i).*window;
-                end
-            end
-        catch
-            continue
-        end
+%         try
+%             [n,m,p] = size(im);
+%             
+%             v = ver;
+%             if any(strcmp('Statistics Toolbox', {v.Name}))
+%                 % cosine taper
+%                 w = .25;
+%                 window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+%                 
+%                 for i = 1:p
+%                     im(:,:,i) = im(:,:,i).*window;
+%                 end
+%             end
+%         catch
+%             continue
+%         end
    
         sample(1).data=im;
         
@@ -127,22 +127,22 @@ else % cancel button not pressed
         
         im=sample(1).data;
 
-        try
-            [n,m,p] = size(im);
-            
-            v = ver;
-            if any(strcmp('Statistics Toolbox', {v.Name}))
-                % cosine taper
-                w = .25;
-                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-                
-                for i = 1:p
-                    im(:,:,i) = im(:,:,i).*window;
-                end
-            end
-        catch
-            continue
-        end        
+%         try
+%             [n,m,p] = size(im);
+%             
+%             v = ver;
+%             if any(strcmp('Statistics Toolbox', {v.Name}))
+%                 % cosine taper
+%                 w = .25;
+%                 window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+%                 
+%                 for i = 1:p
+%                     im(:,:,i) = im(:,:,i).*window;
+%                 end
+%             end
+%         catch
+%             continue
+%         end        
         
         sample(1).data=im;
         
@@ -225,4 +225,4 @@ clear h ans ff Nu Nv mag im auto nlags l centx centy
 ix=1;
 
 set(findobj('tag','current_image'),'userdata',sample);
-
+clear ans

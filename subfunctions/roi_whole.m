@@ -2,7 +2,7 @@
 %roi_whole
 % makes the entire current image the ROI
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -52,22 +52,22 @@ if strcmp(ButtonName,'Yes')
                 [n,m,p] = size(im);
                 
                 
-                try
-                    [n,m,p] = size(im);
-                    
-                    v = ver;
-                    if any(strcmp('Statistics Toolbox', {v.Name}))
-                        % cosine taper
-                        w = .25;
-                        window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-                        
-                        for i = 1:p
-                            im(:,:,i) = im(:,:,i).*window;
-                        end
-                    end
-                catch
-                    continue
-                end
+%                 try
+%                     [n,m,p] = size(im);
+%                     
+%                     v = ver;
+%                     if any(strcmp('Statistics Toolbox', {v.Name}))
+%                         % cosine taper
+%                         w = .25;
+%                         window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+%                         
+%                         for i = 1:p
+%                             im(:,:,i) = im(:,:,i).*window;
+%                         end
+%                     end
+%                 catch
+%                     continue
+%                 end
                 
                 
                 %                 % cosine taper
@@ -83,7 +83,7 @@ if strcmp(ButtonName,'Yes')
                 % first remove previous rois
                 if sample(ii).num_roi>0 && sample(ii).whole_roi~=1
                     for k=1:sample(ii).num_roi
-                        sample(ii).roi{k}=[];
+                        %sample(ii).roi{k}=[];
                         sample(ii).roi_x{k}=[];
                         sample(ii).roi_y{k}=[];
                         sample(ii).roi_line{k}=[];
@@ -91,7 +91,7 @@ if strcmp(ButtonName,'Yes')
                 end
                 
                 sample(ii).num_roi=1;
-                sample(ii).roi{1}=sample(ii).data;
+                %sample(ii).roi{1}=sample(ii).data;
                 sample(ii).roi_x{1}=[2 size(sample(ii).data,2)-1 size(sample(ii).data,2)-1 2 2];
                 sample(ii).roi_y{1}=[2 2 size(sample(ii).data,1)-1 size(sample(ii).data,1)-1 2];
                 
@@ -114,7 +114,7 @@ if strcmp(ButtonName,'Yes')
             % first remove previous rois
             if sample(ix).num_roi>0 && sample(ix).whole_roi~=1
                 for k=1:sample(ix).num_roi
-                    sample(ix).roi{k}=[];
+                    %sample(ix).roi{k}=[];
                     sample(ix).roi_x{k}=[];
                     sample(ix).roi_y{k}=[];
                     sample(ix).roi_line{k}=[];
@@ -129,7 +129,7 @@ if strcmp(ButtonName,'Yes')
             axes(ax)
             
             sample(ix).num_roi=1;
-            sample(ix).roi{1}=sample(ix).data;
+            %sample(ix).roi{1}=sample(ix).data;
             sample(ix).roi_x{1}=[1 size(sample(ix).data,2)-1 size(sample(ix).data,2)-1 1 1];
             sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1)-1 size(sample(ix).data,1)-1 1];
             
@@ -146,7 +146,7 @@ if strcmp(ButtonName,'Yes')
         
         sample(ix).whole_roi=1;
         sample(ix).num_roi=1;
-        sample(ix).roi{1}=sample(ix).data;
+        %sample(ix).roi{1}=sample(ix).data;
         sample(ix).roi_x{1}=[1 size(sample(ix).data,2) size(sample(ix).data,2) 1 1];
         sample(ix).roi_y{1}=[1 1 size(sample(ix).data,1) size(sample(ix).data,1) 1];
         
@@ -176,3 +176,5 @@ if sample(ix).num_roi>0
 end
 
 set(findobj('tag','current_image'),'userdata',sample);
+clear im
+clear ans

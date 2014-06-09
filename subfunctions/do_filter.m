@@ -2,7 +2,7 @@
 % do_filter
 % flattens current image
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -50,16 +50,16 @@ if length(sample)>1
                 end
                 
                 
-                im=sample(ii).data;
-                [n,m,p] = size(im);
-                % cosine taper
-                w = .25; % width of cosine in percent of width of X
-                window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-                
-                for i = 1:p
-                    im(:,:,i) = im(:,:,i).*window;
-                end
-                sample(ii).data=im;
+%                 im=sample(ii).data;
+%                 [n,m,p] = size(im);
+%                 % cosine taper
+%                 w = .25; % width of cosine in percent of width of X
+%                 window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+%                 
+%                 for i = 1:p
+%                     im(:,:,i) = im(:,:,i).*window;
+%                 end
+%                 sample(ii).data=im;
                 
                 [rows,cols] = size(sample(ii).data);
                 sample(ix).orig_data=sample(ii).data;
@@ -83,12 +83,12 @@ if length(sample)>1
                 
                 sample(ii).filtered = 1;
                 
-                for k=1:sample(ii).num_roi
-                    sample(ii).roi{k}=sample(ii).data(min(sample(ii).roi_y{k}):...
-                        max(sample(ii).roi_y{k}),...
-                        min(sample(ii).roi_x{k}):...
-                        max(sample(ii).roi_x{k}));
-                end
+%                 for k=1:sample(ii).num_roi
+%                     sample(ii).roi{k}=sample(ii).data(min(sample(ii).roi_y{k}):...
+%                         max(sample(ii).roi_y{k}),...
+%                         min(sample(ii).roi_x{k}):...
+%                         max(sample(ii).roi_x{k}));
+%                 end
                 
                 
             end
@@ -140,12 +140,12 @@ if length(sample)>1
             
             sample(ix).filtered = 1;
             
-            for k=1:sample(ix).num_roi
-                sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
-                    max(sample(ix).roi_y{k}),...
-                    min(sample(ix).roi_x{k}):...
-                    max(sample(ix).roi_x{k}));
-            end
+%             for k=1:sample(ix).num_roi
+%                 sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
+%                     max(sample(ix).roi_y{k}),...
+%                     min(sample(ix).roi_x{k}):...
+%                     max(sample(ix).roi_x{k}));
+%             end
             
             if ~isempty(sample(ix).dist)
                 sample(ix).dist=[];
@@ -192,13 +192,13 @@ else
         close(h)
         
         sample(ix).filtered = 1;
-        
-        for k=1:sample(ix).num_roi
-            sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
-                max(sample(ix).roi_y{k}),...
-                min(sample(ix).roi_x{k}):...
-                max(sample(ix).roi_x{k}));
-        end
+%         
+%         for k=1:sample(ix).num_roi
+%             sample(ix).roi{k}=sample(ix).data(min(sample(ix).roi_y{k}):...
+%                 max(sample(ix).roi_y{k}),...
+%                 min(sample(ix).roi_x{k}):...
+%                 max(sample(ix).roi_x{k}));
+%         end
         
         if ~isempty(sample(ix).dist)
             sample(ix).dist=[];
@@ -262,4 +262,5 @@ disp('... done!')
 
 clear h k Nu Nv mag im auto nlags l centx centy
 
+clear ans img
 

@@ -2,7 +2,7 @@
 % calc_psd
 % calculates PSD for each ROI
 % 
-% Written by Daniel Buscombe, various times in 2012 and 2013
+% Written by Daniel Buscombe, various times in 2012 - 2014
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -22,7 +22,7 @@
 %====================================
 
 dofilt=0;
-density=50;
+density=20;
 start_size=3;
 
 MotherWav='Morlet';
@@ -36,16 +36,35 @@ if sample(ix).num_roi>0
     
     P=cell(1,sample(ix).num_roi); scale=cell(1,sample(ix).num_roi);
     
+    [nx, ny]= size(sample(ix).data);
+    
     h = waitbar(0,'Please wait...');
     for k=1:sample(ix).num_roi
         
-        [P{k},scale{k}]=get_psd(sample(ix).roi{k},density,Args);
-%         [P{k},scale{k}]=get_psd_quick(sample(ix).roi{k},density);
+        if max(sample(ix).roi_x{sample(ix).num_roi})>ny
+            f = find( sample(ix).roi_x{sample(ix).num_roi} > ny);
+            sample(ix).roi_x{sample(ix).num_roi}(f) = ny;
+        end
+        
+        if max(sample(ix).roi_y{sample(ix).num_roi})>nx
+            f = find( sample(ix).roi_y{sample(ix).num_roi} > nx);
+            sample(ix).roi_y{sample(ix).num_roi}(f) = nx;
+        end        
+
+        % introduce this as a temporary variable to reduce memory
+        tmp = sample(ix).data(min(sample(ix).roi_y{sample(ix).num_roi}):...
+            max(sample(ix).roi_y{sample(ix).num_roi}),...
+            min(sample(ix).roi_x{sample(ix).num_roi}):...
+            max(sample(ix).roi_x{sample(ix).num_roi}));   
+        
+        [P{k},scale{k}]=get_psd(tmp,density,Args); %sample(ix).roi{k}
+        %         [P{k},scale{k}]=get_psd_quick(sample(ix).roi{k},density);
         
         waitbar(k/sample(ix).num_roi,h)
         
     end
     close(h)
+    clear tmp ans
     
     scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
     
@@ -107,7 +126,7 @@ if sample(ix).num_roi>0
     
     h=findobj('tag','auto_image');
     
-    tmpimage=sample(ix).roi{1};
+    tmpimage=sample(ix).data; %roi{1};
     [Nv,Nu,blank] = size(tmpimage);
     tmpimage=tmpimage(round((Nv/2)-sample(ix).percentiles(8)*1/sample(ix).resolution):...
         round((Nv/2)+sample(ix).percentiles(8)*1/sample(ix).resolution),...
