@@ -66,7 +66,8 @@ if sample(ix).num_roi>0
     close(h)
     clear tmp ans
     
-    scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
+    scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
+    %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
     
     D=zeros(sample(ix).num_roi,length(scalei));
     for k=1:sample(ix).num_roi
@@ -86,7 +87,7 @@ if sample(ix).num_roi>0
 %     index_keep=1:...
 %         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
 %     
-    index_keep=[1:length(sample(ix).dist)];
+    index_keep=[3:length(sample(ix).dist)-5];
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));

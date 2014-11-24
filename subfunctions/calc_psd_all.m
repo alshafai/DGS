@@ -74,7 +74,8 @@ else
             clear tmp ans
             
             %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
-            scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),20);
+            scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
+            %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
             
             D=zeros(sample(ii).num_roi,length(scalei));
             for k=1:sample(ii).num_roi
@@ -96,7 +97,7 @@ else
 %             index_keep=1:...
 %                 round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.99));
 %             
-            index_keep=[1:length(sample(ii).dist)];
+            index_keep=[3:length(sample(ii).dist)-5];
             
             sample(ii).dist=sample(ii).dist(index_keep,:);
             sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));

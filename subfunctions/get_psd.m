@@ -76,7 +76,7 @@ for j=1:density:rows
         smooth=ifft(F.*fft(wave(ii,:),npad));
         twave(ii,:)=smooth(1:cols);
     end
-    %scale=scale./2;
+    scale=scale./2;
     
     if isreal(wave)
         twave=real(twave);
