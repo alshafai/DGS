@@ -40,82 +40,87 @@ else
     
     wh = waitbar(0,'Please wait, processing all images ...');
     
-    for ii=1:length(sample)
-        
-        if sample(ii).num_roi>0
-            
-            P=cell(1,sample(ii).num_roi); scale=cell(1,sample(ii).num_roi);
-            
-            for k=1:sample(ii).num_roi
+    for ii=682:length(sample)
+               
+        try
+            if sample(ii).num_roi>0
                 
-                [nx, ny]= size(sample(ii).data);
+                P=cell(1,sample(ii).num_roi); scale=cell(1,sample(ii).num_roi);
                 
-                if max(sample(ii).roi_x{sample(ii).num_roi})>ny
-                    f = find( sample(ii).roi_x{sample(ii).num_roi} > ny);
-                    sample(ii).roi_x{sample(ii).num_roi}(f) = ny;
+                for k=1:sample(ii).num_roi
+                    
+                    [nx, ny]= size(sample(ii).data);
+                    
+                    if max(sample(ii).roi_x{sample(ii).num_roi})>ny
+                        f = find( sample(ii).roi_x{sample(ii).num_roi} > ny);
+                        sample(ii).roi_x{sample(ii).num_roi}(f) = ny;
+                    end
+                    
+                    if max(sample(ii).roi_y{sample(ii).num_roi})>nx
+                        f = find( sample(ii).roi_y{sample(ii).num_roi} > nx);
+                        sample(ii).roi_y{sample(ii).num_roi}(f) = nx;
+                    end
+                    
+                    % introduce this as a temporary variable to reduce memory
+                    tmp = sample(ii).data(min(sample(ii).roi_y{sample(ii).num_roi}):...
+                        max(sample(ii).roi_y{sample(ii).num_roi}),...
+                        min(sample(ii).roi_x{sample(ii).num_roi}):...
+                        max(sample(ii).roi_x{sample(ii).num_roi}));
+                    
+                    [P{k},scale{k}]=get_psd(tmp,density,Args); %sample(ii).roi{k}
+                    %                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
+                    
+                end
+                clear tmp ans
+                
+                %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
+                scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
+                %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
+                
+                D=zeros(sample(ii).num_roi,length(scalei));
+                for k=1:sample(ii).num_roi
+                    tmp=interp1(scale{k},P{k},scalei);
+                    tmp(isnan(tmp))=0;
+                    D(k,:)=tmp./sum(tmp);
                 end
                 
-                if max(sample(ii).roi_y{sample(ii).num_roi})>nx
-                    f = find( sample(ii).roi_y{sample(ii).num_roi} > nx);
-                    sample(ii).roi_y{sample(ii).num_roi}(f) = nx;
+                clear k tmp P scale h x y
+                
+                if sample(ii).num_roi>1
+                    d=(mean(D)./sum(mean(D)))'; d(isnan(d))=0;
+                    sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+                else
+                    d=D(:); d(isnan(d))=0;
+                    sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
                 end
                 
+                %             index_keep=1:...
+                %                 round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.99));
+                %
+                index_keep=[3:length(sample(ii).dist)-5];
                 
-                % introduce this as a temporary variable to reduce memory
-                tmp = sample(ii).data(min(sample(ii).roi_y{sample(ii).num_roi}):...
-                    max(sample(ii).roi_y{sample(ii).num_roi}),...
-                    min(sample(ii).roi_x{sample(ii).num_roi}):...
-                    max(sample(ii).roi_x{sample(ii).num_roi}));
+                sample(ii).dist=sample(ii).dist(index_keep,:);
+                sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
                 
-                [P{k},scale{k}]=get_psd(tmp,density,Args); %sample(ii).roi{k}
-                %                [P{k},scale{k}]=get_psd_quick(sample(ii).roi{k},density);
+                [sample(ii).percentiles,sample(ii).geom_moments,...
+                    sample(ii).arith_moments]=gsdparams(sample(ii).dist(:,2),sample(ii).dist(:,1));
                 
-            end
-            clear tmp ans
-            
-            %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
-            scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
-            %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
-            
-            D=zeros(sample(ii).num_roi,length(scalei));
-            for k=1:sample(ii).num_roi
-                tmp=interp1(scale{k},P{k},scalei);
-                tmp(isnan(tmp))=0;
-                D(k,:)=tmp./sum(tmp);
-            end
-            
-            clear k tmp P scale h x y
-            
-            if sample(ii).num_roi>1
-                d=(mean(D)./sum(mean(D)))'; d(isnan(d))=0;
-                sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+                sample(ii).geom_moments(2) = 1000*2^-sample(ii).geom_moments(2);
+                
+                clear D scalei index_keep
+                
+                % need to save outputs
+                
             else
-                d=D(:); d(isnan(d))=0;
-                sample(ii).dist=[scalei(:).*sample(ii).resolution,d./sum(d)];
+                
+                uiwait(msgbox('Create ROI first!','Warning','modal'));
+                
             end
             
-%             index_keep=1:...
-%                 round(interp1(cumsum(sample(ii).dist(:,2)),1:length(cumsum(sample(ii).dist(:,2))),.99));
-%             
-            index_keep=[3:length(sample(ii).dist)-5];
-            
-            sample(ii).dist=sample(ii).dist(index_keep,:);
-            sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
-            
-            [sample(ii).percentiles,sample(ii).geom_moments,...
-                sample(ii).arith_moments]=gsdparams(sample(ii).dist(:,2),sample(ii).dist(:,1));
-            
-            sample(ii).geom_moments(2) = 1000*2^-sample(ii).geom_moments(2);
-            
-            clear D scalei index_keep
-            
-            % need to save outputs
-            
-        else
-            
-            uiwait(msgbox('Create ROI first!','Warning','modal'));
-            
+        catch
+            continue
         end
+        
         waitbar(ii/length(sample),wh)
         
     end
