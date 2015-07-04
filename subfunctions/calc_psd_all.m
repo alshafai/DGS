@@ -40,7 +40,7 @@ else
     
     wh = waitbar(0,'Please wait, processing all images ...');
     
-    for ii=682:length(sample)
+    for ii=1:length(sample)
                
         try
             if sample(ii).num_roi>0
