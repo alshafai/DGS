@@ -76,7 +76,7 @@ for j=1:density:rows
         smooth=ifft(F.*fft(wave(ii,:),npad));
         twave(ii,:)=smooth(1:cols);
     end
-    scale=scale./2;
+    %scale=scale./2;
     
     if isreal(wave)
         twave=real(twave);
@@ -94,8 +94,8 @@ P1=mean((cell2mat(W1)),2);
 P1=P1./sum(P1);
 
 
-if max(scale) > (cols/3)
-    f=find(scale>(cols/3),1,'first');
+if max(scale) > (cols*Args.Factor)
+    f=find(scale>(cols*Args.Factor),1,'first');
     scale=scale(1:f);
     P1=P1(1:f);
 end

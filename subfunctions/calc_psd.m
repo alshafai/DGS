@@ -30,7 +30,8 @@ Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
     'Dj',1/8,... %8, ...    % this will do dj sub-octaves per octave
     'S0',start_size,...    % this says start at a scale of X pixels
     'J1',[],...
-    'Mother',MotherWav);
+    'Mother',MotherWav,...
+    'Factor', 0.67); % maximum scale in pixels as a proportion of the number of columns in image 
 
 if sample(ix).num_roi>0
     
@@ -87,7 +88,7 @@ if sample(ix).num_roi>0
 %     index_keep=1:...
 %         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
 %     
-    index_keep=[3:length(sample(ix).dist)-5];
+    index_keep=[1:length(sample(ix).dist)];
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
