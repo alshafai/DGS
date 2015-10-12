@@ -1,7 +1,7 @@
 
 function [P1,scale]=get_psd(himt,density,Args)
 % 
-% Written by Daniel Buscombe, various times in 2012 - 2014
+% Written by Daniel Buscombe, various times in 2012 - 2015
 % while at
 % School of Marine Science and Engineering, University of Plymouth, UK
 % then
@@ -93,6 +93,8 @@ end
 P1=mean((cell2mat(W1)),2);
 P1=P1./sum(P1);
 
+P1 = P1(:)./(scale(:).^(0.5));
+P1=P1./sum(P1);
 
 if max(scale) > (cols*Args.Factor)
     f=find(scale>(cols*Args.Factor),1,'first');
@@ -103,6 +105,14 @@ P1=P1./sum(P1);
 
 P1(1)=P1(1)/10;
 P1=P1./sum(P1);
+
+n = (0:length(scale)-1)'-(length(scale)-1)/2;
+P1 = P1.*exp(-(1/2)*((pi/2)*n/((length(scale)-1)/2)).^2);
+P1=P1./sum(P1);
+
+f = find(~isnan(scale));
+scale = scale(f);
+P1 = P1(f);
 
 
 

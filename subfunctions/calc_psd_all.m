@@ -22,7 +22,7 @@
 %====================================
 
 dofilt=0;
-density=20;
+density=10;
 start_size=3;
 
 MotherWav='Morlet';

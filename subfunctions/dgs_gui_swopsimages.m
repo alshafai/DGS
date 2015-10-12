@@ -42,16 +42,16 @@ if isempty(sample(ix).data)
     try
         [n,m,p] = size(im);
         
-        v = ver;
-        if any(strcmp('Statistics Toolbox', {v.Name}))
-            % cosine taper
-            w = .25;
-            window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
-            
-            for i = 1:p
-                im(:,:,i) = im(:,:,i).*window;
-            end
-        end
+%         v = ver;
+%         if any(strcmp('Statistics Toolbox', {v.Name}))
+%             % cosine taper
+%             w = .25;
+%             window = repmat(tukeywin(n,w),1,m).*rot90(repmat(tukeywin(m,w),1,n));
+%             
+%             for i = 1:p
+%                 im(:,:,i) = im(:,:,i).*window;
+%             end
+%         end
     catch
         continue
     end

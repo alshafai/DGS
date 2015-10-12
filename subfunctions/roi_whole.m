@@ -32,7 +32,7 @@ if strcmp(ButtonName,'Yes')
         
         if strcmp(ButtonName,'Yes')
             
-            wh = waitbar(0,'Please wait, applying ROIs ...');
+            %wh = waitbar(0,'Please wait, applying ROIs ...');
 
             for ii=1:length(sample)
                 
@@ -103,9 +103,9 @@ if strcmp(ButtonName,'Yes')
                 sample(ii).roi_line{1} = line(sample(ii).roi_x{1},...
                     sample(ii).roi_y{1},'color','red','linewidth',2);
                 
-                waitbar(ii/length(sample),wh)
+                %waitbar(ii/length(sample),wh)
             end
-            close(wh)
+            %close(wh)
             
             
         else
