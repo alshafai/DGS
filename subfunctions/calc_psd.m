@@ -96,34 +96,22 @@ if sample(ix).num_roi>0
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
 
-                  
-    if isempty(sample(ii).auto)
-       [Nv,Nu,blank] = size(sample(ix).data);
     
-       % calculate 2D autocorrel
-       im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
-       % 2D-FFT transform on de-meaned image
-       % power spectrum
-       mag=abs(fft2(fftshift(im-mean(im(:))))).^2;
-       %Shift zero-frequency component to centre of spectrum
-       auto=fftshift(real(ifft2(mag)));
-       auto = auto./max(auto(:));
-    
-       [centx,centy] = find(auto==1);
-       % spectify number of lags to compute
-       l = length(auto);
-       nlags=round(l/8);
-       % centre 2d autocorrelogram
-       auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
-    
-       sample(ix).auto = auto;
+    try
+        if isempty(sample(ii).auto)
+            auto = get_auto(sample(ii).data);
+        else
+            auto = sample(ii).auto;
+        end
+    catch
+        auto = get_auto(sample(ii).data);
     end
                   
     
-    [ss1, ss2, ss3]=magic_gs(sample(ix).auto);
+    [ss1, ss2, ss3]=magic_gs(auto);
     
     if ~isnan(ss1)                
-    ssfactor = min([ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
+    ssfactor = min(sample(ii).resolution.*[ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
     sample(ix).dist(:,1) = sample(ix).dist(:,1)*ssfactor;
     clear ssfactor
     end
