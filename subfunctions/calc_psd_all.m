@@ -31,7 +31,7 @@ Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
     'S0',start_size,...    % this says start at a scale of X pixels
     'J1',[],...
     'Mother',MotherWav,...
-    'Factor', 0.67); % maximum scale in pixels as a proportion of the number of columns in image 
+    'Factor', 1/8); % maximum scale in pixels as a proportion of the number of columns in image 
 
 
 if length(sample)==1
@@ -44,7 +44,7 @@ else
     
     for ii=1:length(sample)
                
-        try
+%         try
             if sample(ii).num_roi>0
                 
                 P=cell(1,sample(ii).num_roi); scale=cell(1,sample(ii).num_roi);
@@ -62,7 +62,9 @@ else
                         f = find( sample(ii).roi_y{sample(ii).num_roi} > nx);
                         sample(ii).roi_y{sample(ii).num_roi}(f) = nx;
                     end
-                    
+
+                    %Args.Factor = Args.Factor*(sample(ii).roi_x{1}(2) / size(sample(ii).data,2));
+                   
                     % introduce this as a temporary variable to reduce memory
                     tmp = sample(ii).data(min(sample(ii).roi_y{sample(ii).num_roi}):...
                         max(sample(ii).roi_y{sample(ii).num_roi}),...
@@ -76,7 +78,7 @@ else
                 clear tmp ans
                 
                 %scalei=min(cellfun(@min,scale)):10:max(cellfun(@max,scale));
-                scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
+                scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),50);
                 %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
                 
                 D=zeros(sample(ii).num_roi,length(scalei));
@@ -105,6 +107,39 @@ else
                 sample(ii).dist=sample(ii).dist(index_keep,:);
                 sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
                 
+                if isempty(sample(ii).auto)
+                [Nv,Nu,blank] = size(sample(ii).data);
+    
+                % calculate 2D autocorrel
+                im=sample(ii).data(1:min(Nu,Nv),1:min(Nu,Nv));
+                % 2D-FFT transform on de-meaned image
+                % power spectrum
+                mag=abs(fft2(fftshift(im-mean(im(:))))).^2;
+                %Shift zero-frequency component to centre of spectrum
+                auto=fftshift(real(ifft2(mag)));
+                auto = auto./max(auto(:));
+    
+                [centx,centy] = find(auto==1);
+                % spectify number of lags to compute
+                l = length(auto);
+                nlags=round(l/8);
+                % centre 2d autocorrelogram
+                auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
+    
+                sample(ii).auto = auto;
+                end
+                
+                
+                [ss1, ss2, ss3]=magic_gs(sample(ii).auto);
+                
+                if ~isnan(ss1)                
+                ssfactor = min([ss1, ss2, ss3] ./ sum(sample(ii).dist(:,1).*sample(ii).dist(:,2)));
+                sample(ii).dist(:,1) = sample(ii).dist(:,1)*ssfactor;
+                clear ssfactor
+                end
+                clear ss1 ss2 ss3
+
+                
                 [sample(ii).percentiles,sample(ii).geom_moments,...
                     sample(ii).arith_moments]=gsdparams(sample(ii).dist(:,2),sample(ii).dist(:,1));
                 
@@ -120,9 +155,9 @@ else
                 
             end
             
-        catch
-            continue
-        end
+%         catch
+%             continue
+%         end
         
         waitbar(ii/length(sample),wh)
         

@@ -69,7 +69,7 @@ ButtonName = questdlg('Apply this ROI to all images?','ROI', ...
 
 if strcmp(ButtonName,'Yes')
     
-    wh = waitbar(0,'Please wait, applying ROIs ...');
+    %wh = waitbar(0,'Please wait, applying ROIs ...');
     
     for ii=2:length(sample)
         
@@ -145,10 +145,10 @@ if strcmp(ButtonName,'Yes')
                 sample(ii).num_roi=0;
             end
         end
-        waitbar(ii/length(sample),wh)
+        %waitbar(ii/length(sample),wh)
         
     end
-    close(wh)
+    %close(wh)
     
     
 end

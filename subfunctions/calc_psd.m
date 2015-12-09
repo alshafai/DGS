@@ -31,7 +31,7 @@ Args=struct('Pad',1,...      % pad the time series with zeroes (recommended)
     'S0',start_size,...    % this says start at a scale of X pixels
     'J1',[],...
     'Mother',MotherWav,...
-    'Factor', 0.67); % maximum scale in pixels as a proportion of the number of columns in image 
+    'Factor', 1/8); % maximum scale in pixels as a proportion of the number of columns in image 
 
 if sample(ix).num_roi>0
     
@@ -41,7 +41,7 @@ if sample(ix).num_roi>0
     
     h = waitbar(0,'Please wait...');
     for k=1:sample(ix).num_roi
-        
+                
         if max(sample(ix).roi_x{sample(ix).num_roi})>ny
             f = find( sample(ix).roi_x{sample(ix).num_roi} > ny);
             sample(ix).roi_x{sample(ix).num_roi}(f) = ny;
@@ -52,6 +52,9 @@ if sample(ix).num_roi>0
             sample(ix).roi_y{sample(ix).num_roi}(f) = nx;
         end        
 
+        %Args.Factor = Args.Factor*(sample(ix).roi_x{1}(2) / size(sample(ix).data,2));
+        
+        
         % introduce this as a temporary variable to reduce memory
         tmp = sample(ix).data(min(sample(ix).roi_y{sample(ix).num_roi}):...
             max(sample(ix).roi_y{sample(ix).num_roi}),...
@@ -67,7 +70,7 @@ if sample(ix).num_roi>0
     close(h)
     clear tmp ans
     
-    scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),30);
+    scalei=linspace(min(cellfun(@min,scale)),max(cellfun(@max,scale)),50);
     %scalei = logspace(floor(log10(min(cellfun(@min,scale)))),ceil(log10(max(cellfun(@max,scale)))),20);
     
     D=zeros(sample(ix).num_roi,length(scalei));
@@ -92,7 +95,41 @@ if sample(ix).num_roi>0
     
     sample(ix).dist=sample(ix).dist(index_keep,:);
     sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
+
+                  
+    if isempty(sample(ii).auto)
+       [Nv,Nu,blank] = size(sample(ix).data);
     
+       % calculate 2D autocorrel
+       im=sample(ix).data(1:min(Nu,Nv),1:min(Nu,Nv));
+       % 2D-FFT transform on de-meaned image
+       % power spectrum
+       mag=abs(fft2(fftshift(im-mean(im(:))))).^2;
+       %Shift zero-frequency component to centre of spectrum
+       auto=fftshift(real(ifft2(mag)));
+       auto = auto./max(auto(:));
+    
+       [centx,centy] = find(auto==1);
+       % spectify number of lags to compute
+       l = length(auto);
+       nlags=round(l/8);
+       % centre 2d autocorrelogram
+       auto = auto(centx-nlags:centx+nlags,centy-nlags:centy+nlags);
+    
+       sample(ix).auto = auto;
+    end
+                  
+    
+    [ss1, ss2, ss3]=magic_gs(sample(ix).auto);
+    
+    if ~isnan(ss1)                
+    ssfactor = min([ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
+    sample(ix).dist(:,1) = sample(ix).dist(:,1)*ssfactor;
+    clear ssfactor
+    end
+    clear ss1 ss2 ss3
+
+                    
     [sample(ix).percentiles,sample(ix).geom_moments,...
         sample(ix).arith_moments]=gsdparams(sample(ix).dist(:,2),sample(ix).dist(:,1));
     
