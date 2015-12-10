@@ -98,20 +98,20 @@ if sample(ix).num_roi>0
 
     
     try
-        if isempty(sample(ii).auto)
-            auto = get_auto(sample(ii).data);
+        if isempty(sample(ix).auto)
+            auto = get_auto(sample(ix).data);
         else
-            auto = sample(ii).auto;
+            auto = sample(ix).auto;
         end
     catch
-        auto = get_auto(sample(ii).data);
+        auto = get_auto(sample(ix).data);
     end
                   
     
     [ss1, ss2, ss3]=magic_gs(auto);
     
     if ~isnan(ss1)                
-    ssfactor = min(sample(ii).resolution.*[ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
+    ssfactor = min(sample(ix).resolution.*[ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
     sample(ix).dist(:,1) = sample(ix).dist(:,1)*ssfactor;
     clear ssfactor
     end
