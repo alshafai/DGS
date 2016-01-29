@@ -91,31 +91,33 @@ if sample(ix).num_roi>0
 %     index_keep=1:...
 %         round(interp1(cumsum(sample(ix).dist(:,2)),1:length(cumsum(sample(ix).dist(:,2))),.99));
 %     
-    index_keep=[1:length(sample(ix).dist)];
-    
-    sample(ix).dist=sample(ix).dist(index_keep,:);
-    sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
+index_keep=[1:length(sample(ix).dist)];
 
-    
-    try
-        if isempty(sample(ix).auto)
-            auto = get_auto(sample(ix).data);
-        else
-            auto = sample(ix).auto;
-        end
-    catch
-        auto = get_auto(sample(ix).data);
-    end
+sample(ix).dist=sample(ix).dist(index_keep,:);
+sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
+
+sample(ix).dist(:,2)=sample(ix).dist(:,2)./sqrt(sample(ix).dist(:,1));
+sample(ix).dist(:,2)=sample(ix).dist(:,2)./sum(sample(ix).dist(:,2));
+
+%     try
+%         if isempty(sample(ix).auto)
+%             auto = get_auto(sample(ix).data);
+%         else
+%             auto = sample(ix).auto;
+%         end
+%     catch
+%         auto = get_auto(sample(ix).data);
+%     end
                   
     
-    [ss1, ss2, ss3]=magic_gs(auto);
+    %[ss1, ss2, ss3]=magic_gs(auto);
     
-    if ~isnan(ss1)                
-    ssfactor = min(sample(ix).resolution.*[ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
-    sample(ix).dist(:,1) = sample(ix).dist(:,1)*ssfactor;
-    clear ssfactor
-    end
-    clear ss1 ss2 ss3
+    %if ~isnan(ss1)                
+    %ssfactor = min(sample(ix).resolution.*[ss1, ss2, ss3] ./ sum(sample(ix).dist(:,1).*sample(ix).dist(:,2)));
+    %sample(ix).dist(:,1) = sample(ix).dist(:,1)*ssfactor;
+    %clear ssfactor
+    %end
+    %clear ss1 ss2 ss3
 
                     
     [sample(ix).percentiles,sample(ix).geom_moments,...

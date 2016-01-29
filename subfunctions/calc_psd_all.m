@@ -103,29 +103,32 @@ else
                 %
                 %index_keep=[3:length(sample(ii).dist)-5];
                 index_keep=[1:length(sample(ii).dist)];
-                
+                                
                 sample(ii).dist=sample(ii).dist(index_keep,:);
                 sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
+
+                sample(ii).dist(:,2)=sample(ii).dist(:,2)./sqrt(sample(ii).dist(:,1));
+                sample(ii).dist(:,2)=sample(ii).dist(:,2)./sum(sample(ii).dist(:,2));
                 
-                try
-                    if isempty(sample(ii).auto)
-                        auto = get_auto(sample(ii).data);
-                    else
-                        auto = sample(ii).auto;
-                    end
-                catch
-                    auto = get_auto(sample(ii).data);
-                end
+%                 try
+%                     if isempty(sample(ii).auto)
+%                         auto = get_auto(sample(ii).data);
+%                     else
+%                         auto = sample(ii).auto;
+%                     end
+%                 catch
+%                     auto = get_auto(sample(ii).data);
+%                 end
                 
                 
-                [ss1, ss2, ss3]=magic_gs(auto);
+                %[ss1, ss2, ss3]=magic_gs(auto);
                 
-                if ~isnan(ss1)                
-                ssfactor = min(sample(ii).resolution.*[ss1, ss2, ss3] ./ sum(sample(ii).dist(:,1).*sample(ii).dist(:,2)));
-                sample(ii).dist(:,1) = sample(ii).dist(:,1)*ssfactor;
-                clear ssfactor
-                end
-                clear ss1 ss2 ss3
+                %if ~isnan(ss1)                
+                %ssfactor = min(sample(ii).resolution.*[ss1, ss2, ss3] ./ sum(sample(ii).dist(:,1).*sample(ii).dist(:,2)));
+                %sample(ii).dist(:,1) = sample(ii).dist(:,1)*ssfactor;
+                %clear ssfactor
+                %end
+                %clear ss1 ss2 ss3
 
                 
                 [sample(ii).percentiles,sample(ii).geom_moments,...
